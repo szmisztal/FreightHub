@@ -1,0 +1,57 @@
+FreightHub/
+│
+├── app/
+│   ├── __init__.py
+│   ├── common/
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   └── forms.py
+│   ├── user/
+│   │   ├── __init__.py
+│   │   ├── routes.py
+│   │   ├── templates/
+│   │   │   ├── login.html
+│   │   │   └── register.html
+│   │   └── forms.py
+│   ├── logistician/
+│   │   ├── __init__.py
+│   │   ├── routes.py
+│   │   ├── templates/
+│   │   │   └── dashboard.html
+│   │   └── forms.py
+│   ├── dispatcher/
+│   │   ├── __init__.py
+│   │   ├── routes.py
+│   │   ├── templates/
+│   │   │   └── dashboard.html
+│   │   └── forms.py
+│   ├── driver/
+│   │   ├── __init__.py
+│   │   ├── routes.py
+│   │   ├── templates/
+│   │   │   └── dashboard.html
+│   │   └── forms.py
+│   ├── templates/
+│   │   └── base.html
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── img/
+│   └── utilities/
+│       └── helpers.py
+│
+├── migrations/
+│   ├── versions/
+│   └── env.py
+│
+├── tests/
+│   ├── __init__.py
+│   ├── test_models.py
+│   ├── test_routes.py
+│   └── test_forms.py
+│
+├── venv/
+│
+├── requirements.txt
+├── config.py
+└── run.py
