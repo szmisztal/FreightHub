@@ -11,10 +11,21 @@
         <nav>
             <ul>
                 <li><a href="{{ url_for('user.register') }}">Register</a></li>
+                <li><a href="{{ url_for('user.login') }}">Login</a></li>
+                <li><a href="{{ url_for('user.logout_confirm') }}">Logout</a></li>
             </ul>
         </nav>
     </header>
     <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
         {% block content %}
         <p></p>
         {% endblock %}
