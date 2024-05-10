@@ -1,8 +1,10 @@
 from flask import render_template, redirect, url_for, flash
-from . import user_bp
+from flask import request
+from flask_login import login_user, logout_user, current_user, login_required
 from app import db, bcrypt
-from app.user.forms import RegistrationForm
-from app.user.models import User
+from . import user_bp
+from .forms import RegistrationForm, LoginForm
+from .models import User
 
 @user_bp.route("/register", methods=["GET", "POST"])
 def register():
@@ -34,3 +36,31 @@ def create_user(form):
         password_hash=hashed_password,
         role=form.role.data
     )
+
+
+@user_bp.route("/login", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        flash("You are logged in", "error")
+        return redirect(url_for("home"))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password_hash, form.password.data):
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get("next")
+            flash("Login successful", "success")
+            return redirect(next_page or url_for("home"))
+        else:
+            flash("Login Unsuccessful. Please check email and password", "danger")
+    return render_template("login.html", form=form)
+
+@user_bp.route("/logout", methods=["POST"])
+def logout():
+    logout_user()
+    flash("You have been logged out.", "success")
+    return redirect(url_for("home"))
+
+@user_bp.route("/logout/confirm", methods=["GET"])
+def logout_confirm():
+    return render_template("logout_confirm.html")
