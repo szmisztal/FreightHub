@@ -6,7 +6,7 @@
 
 {% block content %}
 <div class="registration-form">
-    <form method="post" action="{{ url_for('register') }}">
+    <form method="post" action="{{ url_for('user.register') }}">
         {{ form.hidden_tag() }}
         <div>
             {{ form.username.label }} {{ form.username(size=20) }}<br>
