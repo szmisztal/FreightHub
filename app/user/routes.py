@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash
 from flask import request
-from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user
 from app import db, bcrypt
 from . import user_bp
 from .forms import RegistrationForm, LoginForm
@@ -37,7 +37,6 @@ def create_user(form):
         role=form.role.data
     )
 
-
 @user_bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
@@ -52,7 +51,7 @@ def login():
             flash("Login successful", "success")
             return redirect(next_page or url_for("home"))
         else:
-            flash("Login Unsuccessful. Please check email and password", "danger")
+            flash("Login Unsuccessful. Please check email and password", "warning")
     return render_template("login.html", form=form)
 
 @user_bp.route("/logout", methods=["POST"])
