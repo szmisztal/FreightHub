@@ -25,7 +25,9 @@ def create_app():
     login_manager.login_view = "user.login"
 
     from app.user import user_bp
+    from app.planner import planner_bp
     app.register_blueprint(user_bp, url_prefix="/user")
+    app.register_blueprint(planner_bp, url_prefix="/planner")
 
     from app.user.models import User
     @login_manager.user_loader
