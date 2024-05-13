@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Name{% endblock %}
+
+{% block header %}Company Name Form{% endblock %}
+
+{% block content %}
+<div class="company_name-form">
+    <form method="post" action="{{ url_for('planner.new_company_address') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.company_name.label }} {{ form.company_name(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.country.label }} {{ form.country(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.town.label }} {{ form.town(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.postal_code.label }} {{ form.postal_code(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.street.label }} {{ form.street(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.street_number.label }} {{ form.street_number(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.phone_number.label }} {{ form.phone_number(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Details{% endblock %}
+
+{% block header %}Company Details{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Company Details: {{ company.name }}</h1>
+    <p>Country: {{ company.country }}</p>
+    <p>Town: {{ company.town }}</p>
+    <p>Postal Code: {{ company.postal_code }}</p>
+    <p>Street: {{ company.street }} {{ company.street_number }}</p>
+    <p>Phone Number: {{ company.phone_number }}</p>
+    <a href="{{ url_for('companies') }}">Back to list</a>
+</body>
+{% endblock %}

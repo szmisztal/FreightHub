@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Companies List{% endblock %}
+
+{% block header %}Companies List{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Companies List</h1>
+    <ul>
+        {% for company in companies %}
+            <li>
+                <a href="{{ url_for('company_details', company_id=company.id) }}">
+                    {{ company.name }} - {{ company.country }}, {{ company.street }} {{ company.street_number }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}
