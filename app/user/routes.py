@@ -48,10 +48,10 @@ def login():
         if user and bcrypt.check_password_hash(user.password_hash, form.password.data):
             login_user(user, remember=form.remember.data)
             next_page = request.args.get("next")
-            flash("Login successful", "success")
+            flash("Login successful.", "success")
             return redirect(next_page or url_for("home"))
         else:
-            flash("Login Unsuccessful. Please check email and password", "warning")
+            flash("Login unsuccessful. Please check email and password.", "warning")
     return render_template("login.html", form=form)
 
 @user_bp.route("/logout", methods=["POST"])
