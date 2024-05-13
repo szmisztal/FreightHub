@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Company Name{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
-{% block header %}Company Name Form{% endblock %}
+{% block header %}{{ title }} Form{% endblock %}
 
 {% block content %}
 <div class="company_name-form">
-    <form method="post" action="{{ url_for('planner.new_company_address') }}">
+    <form method="post">
         {{ form.hidden_tag() }}
         <div>
             {{ form.company_name.label }} {{ form.company_name(size=20) }}<br>
