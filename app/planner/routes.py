@@ -1,4 +1,5 @@
 from flask import render_template, redirect, url_for, flash
+from flask_wtf.csrf import generate_csrf
 from app import db
 from . import planner_bp
 from .models import Company
@@ -13,7 +14,7 @@ def new_company():
         db.session.commit()
         flash("New company has been added.", "success")
         return redirect(url_for("home"))
-    return render_template("create_company.html", form=form)
+    return render_template("company_form.html", form=form, title="New Company")
 
 def create_company(form):
     return Company(
@@ -30,12 +31,43 @@ def create_company(form):
 def companies():
     all_companies = Company.query.all()
     if not all_companies:
-        flash("Companies list empty", "message")
-        return redirect(url_for("home"))
+        flash("Companies list is empty.", "info")
+        return render_template("companies_list.html", companies=all_companies)
     return render_template("companies_list.html", companies=all_companies)
 
 
-@planner_bp.route("/companies/<int:company_id>")
+@planner_bp.route("/companies/<int:company_id>", methods=["GET"])
 def company_details(company_id):
     company = Company.query.get_or_404(company_id)
     return render_template("company_details.html", company=company)
+
+@planner_bp.route("/companies/edit/<int:id>", methods=["GET", "POST"])
+def edit_company(id):
+    company = Company.query.get_or_404(id)
+    form = CompanyForm(obj=company)
+    if form.validate_on_submit():
+        company.name = form.company_name.data
+        company.country = form.country.data
+        company.town = form.town.data
+        company.postal_code = form.postal_code.data
+        company.street = form.street.data
+        company.street_number = form.street_number.data
+        company.phone_number = form.phone_number.data
+        db.session.commit()
+        flash("Company details updated successfully.", "success")
+        return redirect(url_for("companies"))
+    return render_template("company_form.html", form=form, title="Edit Company")
+
+@planner_bp.route("/companies/delete/<int:id>", methods=["POST"])
+def delete_company(id):
+    company = Company.query.get_or_404(id)
+    db.session.delete(company)
+    db.session.commit()
+    flash("Company has been deleted.", "success")
+    return redirect(url_for("companies"))
+
+@planner_bp.route("/companies/confirm-delete/<int:id>", methods=["GET"])
+def confirm_company_delete(id):
+    company = Company.query.get_or_404(id)
+    csrf_token = generate_csrf()
+    return render_template("confirm_delete.html", csrf_token = csrf_token, company=company)
