@@ -2,8 +2,8 @@ from flask import render_template, redirect, url_for, flash
 from flask_wtf.csrf import generate_csrf
 from app import db
 from . import planner_bp
-from .models import Company
-from .forms import CompanyForm
+from .models import Company, TransportationOrder
+from .forms import CompanyForm, TransportationOrderForm
 
 @planner_bp.route("/companies/new", methods=["GET", "POST"])
 def new_company():
@@ -71,3 +71,22 @@ def confirm_company_delete(id):
     company = Company.query.get_or_404(id)
     csrf_token = generate_csrf()
     return render_template("confirm_delete.html", csrf_token = csrf_token, company=company)
+
+@planner_bp.route("/orders/new", methods=["GET", "POST"])
+def new_transportation_order():
+    form = TransportationOrderForm()
+    if form.validate_on_submit():
+        order = create_order(form)
+        db.session.add(order)
+        db.session.commit()
+        flash("New transportation order has been created.", "success")
+        return redirect(url_for("home"))
+    return render_template("transportation_order_form.html", form=form, title="New Order")
+
+def create_order(form):
+    return TransportationOrder(
+        trailer_type=form.trailer_type.data,
+        load_weight=form.load_weight.data,
+        loading_place=form.loading_place.data,
+        delivery_place=form.delivery_place.data
+    )
