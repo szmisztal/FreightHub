@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block header %}{{ title }} Form{% endblock %}
+
+{% block content %}
+<div class="transportation_order-form">
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.trailer_type.label }} {{ form.trailer_type(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.load_weight.label }} {{ form.load_weight(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.loading_place.label }} {{ form.loading_place(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.delivery_place.label }} {{ form.delivery_place(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+</div>
+{% endblock %}
