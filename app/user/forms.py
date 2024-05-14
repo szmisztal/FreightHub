@@ -12,7 +12,7 @@ class RegistrationForm(FlaskForm):
     role = SelectField("Role", choices=[("planner", "Planner"),
                                         ("dispatcher", "Dispatcher"),
                                         ("driver", "Driver")],
-                                        validators=[InputRequired()])
+                               validators=[InputRequired()])
     submit = SubmitField("Register")
 
 class LoginForm(FlaskForm):
