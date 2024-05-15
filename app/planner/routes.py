@@ -70,7 +70,7 @@ def delete_company(id):
 def confirm_company_delete(id):
     company = Company.query.get_or_404(id)
     csrf_token = generate_csrf()
-    return render_template("confirm_delete.html", csrf_token = csrf_token, company=company)
+    return render_template("confirm_company_delete.html", csrf_token = csrf_token, company=company)
 
 @planner_bp.route("/orders/new", methods=["GET", "POST"])
 def new_transportation_order():
@@ -81,7 +81,7 @@ def new_transportation_order():
         db.session.commit()
         flash("New transportation order has been created.", "success")
         return redirect(url_for("home"))
-    return render_template("transportation_order_form.html", form=form, title="New Order")
+    return render_template("transportation_order_form.html", form=form, title="New Transportation Order")
 
 def create_order(form):
     return TransportationOrder(
@@ -90,3 +90,44 @@ def create_order(form):
         loading_place=form.loading_place.data,
         delivery_place=form.delivery_place.data
     )
+
+@planner_bp.route("/orders", methods=["GET"])
+def transportation_orders():
+    all_orders = TransportationOrder.query.all()
+    if not all_orders:
+        flash("Orders list is empty.", "info")
+        return render_template("transportation_orders_list.html", orders=all_orders)
+    return render_template("transportation_orders_list.html", orders=all_orders)
+
+@planner_bp.route("/orders/<int:order_id>", methods=["GET"])
+def transportation_order_details(order_id):
+    order = TransportationOrder.query.get_or_404(order_id)
+    return render_template("transportation_order_details.html", ordery=order)
+
+@planner_bp.route("/orders/edit/<int:id>", methods=["GET", "POST"])
+def edit_transportation_order(id):
+    order = TransportationOrder.query.get_or_404(id)
+    form = TransportationOrderForm(obj=order)
+    if form.validate_on_submit():
+        order.trailer_type = form.trailer_type.data
+        order.load_weight = form.load_weight.data
+        order.loading_place = form.loading_place.data
+        order.deliver_place = form.delivery_place.data
+        db.session.commit()
+        flash("Transportation order details updated successfully.", "success")
+        return redirect(url_for("transportation_orders"))
+    return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
+
+@planner_bp.route("/orders/delete/<int:id>", methods=["POST"])
+def delete_transportation_order(id):
+    order = TransportationOrder.query.get_or_404(id)
+    db.session.delete(order)
+    db.session.commit()
+    flash("Transportation order has been deleted.", "success")
+    return redirect(url_for("transportation_orders"))
+
+@planner_bp.route("/orders/confirm-delete/<int:id>", methods=["GET"])
+def confirm_transportation_order_delete(id):
+    order = TransportationOrder.query.get_or_404(id)
+    csrf_token = generate_csrf()
+    return render_template("confirm_transportation_order_delete.html", csrf_token = csrf_token, order=order)
