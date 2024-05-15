@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Transportation Order Delete{% endblock %}
+
+{% block header %}Transportation Order Delete{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Are you sure you want to delete {{ order }}?</h1>
+    <form action="{{ url_for('delete_transportation_order', id=order.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit">Delete</button>
+    </form>
+    <a href="{{ url_for('transportation_orders') }}">Cancel</a>
+</div>
+{% endblock %}

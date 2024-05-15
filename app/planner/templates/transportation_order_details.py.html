@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Transportation Order Details{% endblock %}
+
+{% block header %}Transportation Order Details{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Order Details:</h1>
+    <p>Date: {{ order.date }}</p>
+    <p>Trailer Type: {{ order.trailer_type }}</p>
+    <p>Load Weight: {{ order.load_weight }}</p>
+    <p>Loading Place: {{ order.loading_place }}</p>
+    <p>Delivery Place: {{ order.delivery_place }}</p>
+    <p>Completed: {{ order.completed }}</p>
+    <a href="{{ url_for('edit_transportation_order', id=order.id) }}">Edit</a>
+    <a href="{{ url_for('confirm_transportation_order_delete', id=order.id) }}">Delete</a>
+    <a href="{{ url_for('transportation_orders') }}">Back to list</a>
+</body>
+{% endblock %}
