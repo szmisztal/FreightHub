@@ -26,10 +26,16 @@ def create_app():
 
     from app.user import user_bp
     from app.planner import planner_bp
+    from app.dispatcher import dispatcher_bp
+    from app.driver import driver_bp
+
     app.register_blueprint(user_bp, url_prefix="/user")
     app.register_blueprint(planner_bp, url_prefix="/planner")
+    app.register_blueprint(dispatcher_bp, url_prefix="/dispatcher")
+    app.register_blueprint(driver_bp, url_prefix="/driver")
 
     from app.user.models import User
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
