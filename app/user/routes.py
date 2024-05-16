@@ -40,7 +40,7 @@ def create_user(form):
 @user_bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        flash("You are logged in", "error")
+        flash("You are logged in", "info")
         return redirect(url_for("home"))
     form = LoginForm()
     if form.validate_on_submit():

@@ -70,7 +70,7 @@ def delete_company(id):
 def confirm_company_delete(id):
     company = Company.query.get_or_404(id)
     csrf_token = generate_csrf()
-    return render_template("confirm_company_delete.html", csrf_token = csrf_token, company=company)
+    return render_template("confirm_company_delete.html", csrf_token=csrf_token, company=company)
 
 @planner_bp.route("/orders/new", methods=["GET", "POST"])
 def new_transportation_order():
@@ -130,4 +130,4 @@ def delete_transportation_order(id):
 def confirm_transportation_order_delete(id):
     order = TransportationOrder.query.get_or_404(id)
     csrf_token = generate_csrf()
-    return render_template("confirm_transportation_order_delete.html", csrf_token = csrf_token, order=order)
+    return render_template("confirm_transportation_order_delete.html", csrf_token=csrf_token, order=order)
