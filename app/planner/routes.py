@@ -58,6 +58,12 @@ def edit_company(id):
         return redirect(url_for("companies"))
     return render_template("company_form.html", form=form, title="Edit Company")
 
+@planner_bp.route("/companies/confirm-delete/<int:id>", methods=["GET"])
+def confirm_company_delete(id):
+    company = Company.query.get_or_404(id)
+    csrf_token = generate_csrf()
+    return render_template("confirm_company_delete.html", csrf_token=csrf_token, company=company)
+
 @planner_bp.route("/companies/delete/<int:id>", methods=["POST"])
 def delete_company(id):
     company = Company.query.get_or_404(id)
@@ -65,12 +71,6 @@ def delete_company(id):
     db.session.commit()
     flash("Company has been deleted.", "success")
     return redirect(url_for("companies"))
-
-@planner_bp.route("/companies/confirm-delete/<int:id>", methods=["GET"])
-def confirm_company_delete(id):
-    company = Company.query.get_or_404(id)
-    csrf_token = generate_csrf()
-    return render_template("confirm_company_delete.html", csrf_token=csrf_token, company=company)
 
 @planner_bp.route("/orders/new", methods=["GET", "POST"])
 def new_transportation_order():
@@ -118,6 +118,12 @@ def edit_transportation_order(id):
         return redirect(url_for("transportation_orders"))
     return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
 
+@planner_bp.route("/orders/confirm-delete/<int:id>", methods=["GET"])
+def confirm_transportation_order_delete(id):
+    order = TransportationOrder.query.get_or_404(id)
+    csrf_token = generate_csrf()
+    return render_template("confirm_transportation_order_delete.html", csrf_token=csrf_token, order=order)
+
 @planner_bp.route("/orders/delete/<int:id>", methods=["POST"])
 def delete_transportation_order(id):
     order = TransportationOrder.query.get_or_404(id)
@@ -126,8 +132,4 @@ def delete_transportation_order(id):
     flash("Transportation order has been deleted.", "success")
     return redirect(url_for("transportation_orders"))
 
-@planner_bp.route("/orders/confirm-delete/<int:id>", methods=["GET"])
-def confirm_transportation_order_delete(id):
-    order = TransportationOrder.query.get_or_404(id)
-    csrf_token = generate_csrf()
-    return render_template("confirm_transportation_order_delete.html", csrf_token=csrf_token, order=order)
+
