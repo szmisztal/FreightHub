@@ -4,7 +4,7 @@ from app.planner.models import TransportationOrder
 from . import dispatcher_bp
 from .forms import AssignDriverForm
 
-@dispatcher_bp.route("/orders/assign_driver/<int:order_id>", methods=["GET", "POST"])
+@dispatcher_bp.route("/orders/assign-driver/<int:order_id>", methods=["GET", "POST"])
 def assign_driver(order_id):
     order = TransportationOrder.query.get_or_404(order_id)
     form = AssignDriverForm()
