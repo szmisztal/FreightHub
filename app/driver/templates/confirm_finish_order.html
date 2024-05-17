@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Finish Order{% endblock %}
+
+{% block header %}Finish Order{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Complete order: {{ current_order }}?</h1>
+    <form action="{{ url_for('finish_order', id=current_order.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit">Complete</button>
+    </form>
+    <a href="{{ url_for('current_transportation_order') }}">Cancel</a>
+</div>
+{% endblock %}
