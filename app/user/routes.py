@@ -1,10 +1,10 @@
 from flask import render_template, redirect, url_for, flash
 from flask import request
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from app import db, bcrypt
+from app.common.models import User
 from . import user_bp
 from .forms import RegistrationForm, LoginForm
-from .models import User
 
 @user_bp.route("/register", methods=["GET", "POST"])
 def register():
@@ -55,11 +55,13 @@ def login():
     return render_template("login.html", form=form)
 
 @user_bp.route("/logout", methods=["POST"])
+@login_required
 def logout():
     logout_user()
     flash("You have been logged out.", "success")
     return redirect(url_for("home"))
 
 @user_bp.route("/logout/confirm", methods=["GET"])
+@login_required
 def logout_confirm():
     return render_template("logout_confirm.html")

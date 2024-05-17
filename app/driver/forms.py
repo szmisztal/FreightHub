@@ -2,8 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField, SubmitField
 from wtforms.validators import DataRequired
 from app import db
-from app.user.models import User
-from app.planner.models import TransportationOrder
+from app.common.models import User, TransportationOrder
 
 class AssignDriverForm(FlaskForm):
     driver = SelectField("Driver", choices=[], validators=[DataRequired()])

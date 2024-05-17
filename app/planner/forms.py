@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, SelectField
 from wtforms.validators import InputRequired, Length, DataRequired, NumberRange
-from app.planner.models import Company
-
+from .models import Company
 
 class CompanyForm(FlaskForm):
     company_name = StringField("Company name", validators=[InputRequired(), Length(max=32)])

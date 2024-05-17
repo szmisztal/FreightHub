@@ -13,7 +13,7 @@
         <p>Load Weight: {{ current_order.load_weight }}</p>
         <p>Loading Place: {{ current_order.loading_place }}</p>
         <p>Delivery Place: {{ current_order.delivery_place }}</p>
-        <a href="{{ url_for('edit_transportation_order', id=order.id) }}">Edit</a>
+        <a href="{{ url_for('confirm_finish_order', id=order.id) }}">Edit</a>
     {% else %}
         <p>You don’t have any orders right now.</p>
     {% endif %}

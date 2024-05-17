@@ -34,7 +34,7 @@ def create_app():
     app.register_blueprint(dispatcher_bp, url_prefix="/dispatcher")
     app.register_blueprint(driver_bp, url_prefix="/driver")
 
-    from app.user.models import User
+    from app.common.models import User
 
     @login_manager.user_loader
     def load_user(user_id):

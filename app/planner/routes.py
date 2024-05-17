@@ -1,11 +1,16 @@
 from flask import render_template, redirect, url_for, flash
 from flask_wtf.csrf import generate_csrf
+from flask_login import login_required
 from app import db
+from app.common.permissions import role_required
+from app.common.models import TransportationOrder
 from . import planner_bp
-from .models import Company, TransportationOrder
+from .models import Company
 from .forms import CompanyForm, TransportationOrderForm
 
 @planner_bp.route("/companies/new", methods=["GET", "POST"])
+@login_required
+@role_required("planner")
 def new_company():
     form = CompanyForm()
     if form.validate_on_submit():
@@ -28,6 +33,8 @@ def create_company(form):
     )
 
 @planner_bp.route("/companies", methods=["GET"])
+@login_required
+@role_required("planner")
 def companies():
     all_companies = Company.query.all()
     if not all_companies:
@@ -37,11 +44,15 @@ def companies():
 
 
 @planner_bp.route("/companies/<int:company_id>", methods=["GET"])
+@login_required
+@role_required("planner")
 def company_details(company_id):
     company = Company.query.get_or_404(company_id)
     return render_template("company_details.html", company=company)
 
 @planner_bp.route("/companies/edit/<int:id>", methods=["GET", "POST"])
+@login_required
+@role_required("planner")
 def edit_company(id):
     company = Company.query.get_or_404(id)
     form = CompanyForm(obj=company)
@@ -59,12 +70,16 @@ def edit_company(id):
     return render_template("company_form.html", form=form, title="Edit Company")
 
 @planner_bp.route("/companies/confirm-delete/<int:id>", methods=["GET"])
+@login_required
+@role_required("planner")
 def confirm_company_delete(id):
     company = Company.query.get_or_404(id)
     csrf_token = generate_csrf()
     return render_template("confirm_company_delete.html", csrf_token=csrf_token, company=company)
 
 @planner_bp.route("/companies/delete/<int:id>", methods=["POST"])
+@login_required
+@role_required("planner")
 def delete_company(id):
     company = Company.query.get_or_404(id)
     db.session.delete(company)
@@ -73,6 +88,8 @@ def delete_company(id):
     return redirect(url_for("companies"))
 
 @planner_bp.route("/orders/new", methods=["GET", "POST"])
+@login_required
+@role_required("planner")
 def new_transportation_order():
     form = TransportationOrderForm()
     if form.validate_on_submit():
@@ -92,6 +109,8 @@ def create_order(form):
     )
 
 @planner_bp.route("/orders", methods=["GET"])
+@login_required
+@role_required("planner")
 def transportation_orders():
     all_orders = TransportationOrder.query.all()
     if not all_orders:
@@ -100,11 +119,15 @@ def transportation_orders():
     return render_template("transportation_orders_list.html", orders=all_orders)
 
 @planner_bp.route("/orders/<int:order_id>", methods=["GET"])
+@login_required
+@role_required("planner")
 def transportation_order_details(order_id):
     order = TransportationOrder.query.get_or_404(order_id)
     return render_template("transportation_order_details.html", ordery=order)
 
 @planner_bp.route("/orders/edit/<int:id>", methods=["GET", "POST"])
+@login_required
+@role_required("planner")
 def edit_transportation_order(id):
     order = TransportationOrder.query.get_or_404(id)
     form = TransportationOrderForm(obj=order)
@@ -119,12 +142,16 @@ def edit_transportation_order(id):
     return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
 
 @planner_bp.route("/orders/confirm-delete/<int:id>", methods=["GET"])
+@login_required
+@role_required("planner")
 def confirm_transportation_order_delete(id):
     order = TransportationOrder.query.get_or_404(id)
     csrf_token = generate_csrf()
     return render_template("confirm_transportation_order_delete.html", csrf_token=csrf_token, order=order)
 
 @planner_bp.route("/orders/delete/<int:id>", methods=["POST"])
+@login_required
+@role_required("planner")
 def delete_transportation_order(id):
     order = TransportationOrder.query.get_or_404(id)
     db.session.delete(order)
