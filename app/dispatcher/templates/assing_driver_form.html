@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Assign Driver{% endblock %}
+
+{% block header %}Assign Driver Form{% endblock %}
+
+{% block content %}
+<div class="transportation_order-form">
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.driver.label }} {{ form.driver(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+</div>
+{% endblock %}
