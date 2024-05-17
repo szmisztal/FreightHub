@@ -23,9 +23,9 @@ class TransportationOrderForm(FlaskForm):
                                                         ("Self-unloading", "Self-unloading trailer"),
                                                         ("Insulated", "Insulated trailer")],
                                                validators=[InputRequired()])
-    load_weight = IntegerField("Load weight", validators=[InputRequired(), NumberRange(min=1000,
+    load_weight = IntegerField("Load weight", validators=[InputRequired(), NumberRange(min=1,
                                                                                        max=24000,
-                                                                                       message="Weight must be in range 1000-24000")])
+                                                                                       message="Weight must be in range 1-24000")])
     loading_place = SelectField("Loading place", choices=[], validators=[DataRequired()])
     delivery_place = SelectField("Delivery place", choices=[], validators=[DataRequired()])
     submit = SubmitField("Submit")
