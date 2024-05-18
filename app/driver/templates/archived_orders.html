@@ -1,25 +1,21 @@
 {% extends 'base.html' %}
 
-{% block title %}Archived Order{% endblock %}
+{% block title %}Archived Orders{% endblock %}
 
-{% block header %}Archived Order{% endblock %}
+{% block header %}Archived Orders{% endblock %}
 
 {% block content %}
 <body>
-    {% if archived_orders %}
-        <ul>
-            {% for order in archived_orders %}
-                <li>
-                  <p>Date: {{ current_order.date }}</p>
-                  <p>Trailer Type: {{ current_order.trailer_type }}</p>
-                  <p>Load Weight: {{ current_order.load_weight }}</p>
-                  <p>Loading Place: {{ current_order.loading_place }}</p>
-                  <p>Delivery Place: {{ current_order.delivery_place }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>You don’t have any archived orders.</p>
-    {% endif %}
+    <ul>
+        {% for order in archived_orders %}
+            <li>
+              <p>Date: {{ order.date }}</p>
+              <p>Trailer Type: {{ order.trailer_type }}</p>
+              <p>Load Weight: {{ order.load_weight }}</p>
+              <p>Loading Place: {{ order.loading_place }}</p>
+              <p>Delivery Place: {{ order.delivery_place }}</p>
+            </li>
+        {% endfor %}
+    </ul>
 </body>
 {% endblock %}
