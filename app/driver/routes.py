@@ -41,7 +41,7 @@ def finish_order(id):
 def completed_orders():
     archived_orders = TransportationOrder.query.filter_by(driver=current_user.id, completed=True).order_by(TransportationOrder.date).all()
     if archived_orders:
-        return render_template("archives_orders.html", archived_orders=archived_orders)
+        return render_template("archived_orders.html", archived_orders=archived_orders)
     else:
         flash("You don’t have any archived orders", "info")
         return redirect(url_for("home"))
