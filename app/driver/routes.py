@@ -6,16 +6,15 @@ from app.common.permissions import role_required
 from app.common.models import TransportationOrder
 from . import driver_bp
 
-@driver_bp.route("/orders/current_order", methods=["GET"])
+@driver_bp.route("/orders/current-order", methods=["GET"])
 @login_required
 @role_required("driver")
 def current_transportation_order():
     current_order = TransportationOrder.query.filter_by(driver=current_user.id).first()
-    if current_order:
-        return render_template("current_order.html", current_order=current_order)
-    else:
+    if not current_order:
         flash("You don’t have any orders right now", "info")
         return redirect(url_for("home"))
+    return render_template("current_order.html", current_order=current_order)
 
 @driver_bp.route("/orders/confirm-finish-order/<int:id>", methods=["GET"])
 @login_required
@@ -40,8 +39,7 @@ def finish_order(id):
 @role_required("driver")
 def completed_orders():
     archived_orders = TransportationOrder.query.filter_by(driver=current_user.id, completed=True).order_by(TransportationOrder.date).all()
-    if archived_orders:
-        return render_template("archived_orders.html", archived_orders=archived_orders)
-    else:
+    if not archived_orders:
         flash("You don’t have any archived orders", "info")
         return redirect(url_for("home"))
+    return render_template("archived_orders.html", archived_orders=archived_orders)

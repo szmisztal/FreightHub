@@ -164,10 +164,9 @@ def delete_transportation_order(id):
 @role_required("planner")
 def archived_orders_list():
     archived_orders = TransportationOrder.query.filter_by(completed=True).order_by(TransportationOrder.date).all()
-    if archived_orders:
-        return render_template("archived_transportation_orders.html", archived_orders=archived_orders)
-    else:
+    if not archived_orders:
         flash("There are any archived transportation orders", "info")
         return redirect(url_for("home"))
+    return render_template("archived_transportation_orders.html", archived_orders=archived_orders)
 
 
