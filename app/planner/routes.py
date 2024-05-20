@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, current_app
 from flask_wtf.csrf import generate_csrf
 from flask_login import login_required
 from app import db
@@ -14,10 +14,15 @@ from .forms import CompanyForm, TransportationOrderForm
 def new_company():
     form = CompanyForm()
     if form.validate_on_submit():
-        company = create_company(form)
-        db.session.add(company)
-        db.session.commit()
-        flash("New company has been added.", "success")
+        try:
+            company = create_company(form)
+            db.session.add(company)
+            db.session.commit()
+            flash("New company has been added.", "success")
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Error during new company adding: {e}")
+            flash(f"Error: {e}, try again")
         return redirect(url_for("home"))
     return render_template("company_form.html", form=form, title="New Company")
 
@@ -57,15 +62,20 @@ def edit_company(id):
     company = Company.query.get_or_404(id)
     form = CompanyForm(obj=company)
     if form.validate_on_submit():
-        company.name = form.company_name.data
-        company.country = form.country.data
-        company.town = form.town.data
-        company.postal_code = form.postal_code.data
-        company.street = form.street.data
-        company.street_number = form.street_number.data
-        company.phone_number = form.phone_number.data
-        db.session.commit()
-        flash("Company details updated successfully.", "success")
+        try:
+            company.name = form.company_name.data
+            company.country = form.country.data
+            company.town = form.town.data
+            company.postal_code = form.postal_code.data
+            company.street = form.street.data
+            company.street_number = form.street_number.data
+            company.phone_number = form.phone_number.data
+            db.session.commit()
+            flash("Company details updated successfully.", "success")
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Error during company editing: {e}")
+            flash(f"Error: {e}, try again")
         return redirect(url_for("companies"))
     return render_template("company_form.html", form=form, title="Edit Company")
 
@@ -81,10 +91,15 @@ def confirm_company_delete(id):
 @login_required
 @role_required("planner")
 def delete_company(id):
-    company = Company.query.get_or_404(id)
-    db.session.delete(company)
-    db.session.commit()
-    flash("Company has been deleted.", "success")
+    try:
+        company = Company.query.get_or_404(id)
+        db.session.delete(company)
+        db.session.commit()
+        flash("Company has been deleted.", "success")
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.exception(f"Error during company deleting: {e}")
+        flash(f"Error: {e}, try again")
     return redirect(url_for("companies"))
 
 @planner_bp.route("/orders/new", methods=["GET", "POST"])
@@ -93,10 +108,15 @@ def delete_company(id):
 def new_transportation_order():
     form = TransportationOrderForm()
     if form.validate_on_submit():
-        order = create_order(form)
-        db.session.add(order)
-        db.session.commit()
-        flash("New transportation order has been created.", "success")
+        try:
+            order = create_order(form)
+            db.session.add(order)
+            db.session.commit()
+            flash("New transportation order has been created.", "success")
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Error during new transportation order adding: {e}")
+            flash(f"Error: {e}, try again")
         return redirect(url_for("home"))
     return render_template("transportation_order_form.html", form=form, title="New Transportation Order")
 
@@ -132,12 +152,17 @@ def edit_transportation_order(id):
     order = TransportationOrder.query.get_or_404(id)
     form = TransportationOrderForm(obj=order)
     if form.validate_on_submit():
-        order.trailer_type = form.trailer_type.data
-        order.load_weight = form.load_weight.data
-        order.loading_place = form.loading_place.data
-        order.deliver_place = form.delivery_place.data
-        db.session.commit()
-        flash("Transportation order details updated successfully.", "success")
+        try:
+            order.trailer_type = form.trailer_type.data
+            order.load_weight = form.load_weight.data
+            order.loading_place = form.loading_place.data
+            order.deliver_place = form.delivery_place.data
+            db.session.commit()
+            flash("Transportation order details updated successfully.", "success")
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Error during transportation order editing: {e}")
+            flash(f"Error: {e}, try again")
         return redirect(url_for("transportation_orders"))
     return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
 
@@ -154,9 +179,14 @@ def confirm_transportation_order_delete(id):
 @role_required("planner")
 def delete_transportation_order(id):
     order = TransportationOrder.query.get_or_404(id)
-    db.session.delete(order)
-    db.session.commit()
-    flash("Transportation order has been deleted.", "success")
+    try:
+        db.session.delete(order)
+        db.session.commit()
+        flash("Transportation order has been deleted.", "success")
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.exception(f"Error during transportation order deleting: {e}")
+        flash(f"Error: {e}, try again")
     return redirect(url_for("transportation_orders"))
 
 @planner_bp.route("/orders/archived", methotds=["GET"])
