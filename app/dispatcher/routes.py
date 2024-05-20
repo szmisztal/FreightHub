@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, current_app
 from flask_login import login_required
 from app import db
 from app.common.permissions import role_required
@@ -33,9 +33,14 @@ def assign_driver(order_id):
     order = TransportationOrder.query.get_or_404(order_id)
     form = AssignDriverForm()
     if form.validate_on_submit():
-        order.driver = form.driver.data
-        db.session.commit()
-        flash(f"{order.driver.first_name} {order.driver.last_name} has been assigned to the order.", "success")
+        try:
+            order.driver = form.driver.data
+            db.session.commit()
+            flash(f"{order.driver.first_name} {order.driver.last_name} has been assigned to the order.", "success")
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Error during driver to transportation order assigning: {e}")
+            flash(f"Error: {e}, try again")
         return redirect(url_for("home"))
     return render_template("assign_driver_form.html", form=form, title="Assign Driver")
 
@@ -46,8 +51,13 @@ def change_assigned_driver(order_id):
     order = TransportationOrder.query.get_or_404(order_id)
     form = AssignDriverForm(obj=order)
     if form.validate_on_submit():
-        order.driver = form.driver.data
-        db.session.commit()
-        flash("The driver change was successful", "success")
+        try:
+            order.driver = form.driver.data
+            db.session.commit()
+            flash("The driver change was successful", "success")
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Error during transportation order`s driver editing: {e}")
+            flash(f"Error: {e}, try again")
         return redirect(url_for("home"))
     return render_template("assign_driver_form.html", form=form, title="Change Driver")

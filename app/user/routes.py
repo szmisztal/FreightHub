@@ -1,5 +1,4 @@
-from flask import render_template, redirect, url_for, flash
-from flask import request
+from flask import render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, current_user, login_required
 from app import db, bcrypt
 from app.common.models import User
@@ -10,19 +9,25 @@ from .forms import RegistrationForm, LoginForm
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        if user_exists(form.username.data, form.email.data):
-            return render_template("register.html", form=form)
-        user = create_user(form)
-        db.session.add(user)
-        db.session.commit()
-        flash("Registration successful, please login.", "success")
-        return redirect(url_for("user.login"))
+        try:
+            if user_exists(form.username.data, form.email.data):
+                flash("Username or email already registered.", "warning")
+                return render_template("register.html", form=form)
+            user = create_user(form)
+            db.session.add(user)
+            db.session.commit()
+            flash("An error occurred during registration. Please try again.", "danger")
+            return redirect(url_for("user.login"))
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Registration error: {e}")
+            flash(f"Error: {e}, try again")
+            return redirect(url_for("home"))
     return render_template("register.html", form=form)
 
 def user_exists(username, email):
     existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
     if existing_user:
-        flash("Username or email already registered.", "error")
         return True
     return False
 

@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, current_app
 from flask_login import current_user, login_required
 from flask_wtf.csrf import generate_csrf
 from app import db
@@ -28,10 +28,16 @@ def confirm_finish_order(id):
 @login_required
 @role_required("driver")
 def finish_order(id):
-    current_order = TransportationOrder.query.get_or_404(id)
-    current_order.completed = True
-    db.session.commit()
-    flash("Transportation order has been completed.", "success")
+    try:
+        current_order = TransportationOrder.query.get_or_404(id)
+        current_order.completed = True
+        db.session.commit()
+        flash("Transportation order has been completed.", "success")
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.exception(f"Error during transportation order finishing by driver "
+                                     f"{current_user.first_name} {current_user.last_name}: {e}")
+        flash(f"Error: {e}, try again")
     return redirect(url_for("home"))
 
 @driver_bp.route("/orders/archived", methods=["GET"])
