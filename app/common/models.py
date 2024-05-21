@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from flask_login import UserMixin
 from app import db
 
@@ -16,18 +16,23 @@ class User(db.Model, UserMixin):
 
 class TransportationOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, default=datetime.date.today, nullable=False)
+    creation_date = db.Column(db.DateTime, default=dt.datetime.utcnow, nullable=False)
+    creation_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    planned_delivery_date = db.Column(db.Date, nullable=False)
     trailer_type = db.Column(db.String(16), nullable=False)
     load_weight = db.Column(db.Integer, nullable=False)
     loading_place = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
     delivery_place = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
-    driver = db.Column(db.String, db.ForeignKey("user.id"), nullable=True)
+    driver = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     completed = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"Date: {self.date}" \
+        return f"Creation by: {self.creation_by}" \
+               f"\nCreation date: {self.creation_date}" \
+               f"\nPlanned delivery date: {self.planned_delivery_date}" \
                f"\nTrailer type: {self.trailer_type}" \
                f"\nLoad weight: {self.load_weight}" \
                f"\nLoading place: {self.loading_place}" \
                f"\nDelivery place: {self.delivery_place}" \
+               f"\nDriver: {self.driver}" \
                f"\nCompleted: {self.completed}"
