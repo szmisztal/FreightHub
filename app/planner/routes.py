@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, current_app
 from flask_wtf.csrf import generate_csrf
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app import db
 from app.common.permissions import role_required
 from app.common.models import TransportationOrder
@@ -22,7 +22,7 @@ def new_company():
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during new company adding: {e}")
-            flash(f"Error: {e}, try again")
+            flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("home"))
     return render_template("company_form.html", form=form, title="New Company")
 
@@ -75,7 +75,7 @@ def edit_company(id):
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during company editing: {e}")
-            flash(f"Error: {e}, try again")
+            flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("companies"))
     return render_template("company_form.html", form=form, title="Edit Company")
 
@@ -99,7 +99,7 @@ def delete_company(id):
     except Exception as e:
         db.session.rollback()
         current_app.logger.exception(f"Error during company deleting: {e}")
-        flash(f"Error: {e}, try again")
+        flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("companies"))
 
 @planner_bp.route("/orders/new", methods=["GET", "POST"])
@@ -116,12 +116,14 @@ def new_transportation_order():
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during new transportation order adding: {e}")
-            flash(f"Error: {e}, try again")
+            flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("home"))
     return render_template("transportation_order_form.html", form=form, title="New Transportation Order")
 
 def create_order(form):
     return TransportationOrder(
+        created_by=current_user.id,
+        planned_delivery_date=form.planned_delivery_date.data,
         trailer_type=form.trailer_type.data,
         load_weight=form.load_weight.data,
         loading_place=form.loading_place.data,
@@ -153,6 +155,7 @@ def edit_transportation_order(id):
     form = TransportationOrderForm(obj=order)
     if form.validate_on_submit():
         try:
+            order.planned_delivery_date = form.planned_delivery_date.data
             order.trailer_type = form.trailer_type.data
             order.load_weight = form.load_weight.data
             order.loading_place = form.loading_place.data
@@ -162,7 +165,7 @@ def edit_transportation_order(id):
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during transportation order editing: {e}")
-            flash(f"Error: {e}, try again")
+            flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("transportation_orders"))
     return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
 
@@ -186,10 +189,10 @@ def delete_transportation_order(id):
     except Exception as e:
         db.session.rollback()
         current_app.logger.exception(f"Error during transportation order deleting: {e}")
-        flash(f"Error: {e}, try again")
+        flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("transportation_orders"))
 
-@planner_bp.route("/orders/archived", methotds=["GET"])
+@planner_bp.route("/orders/archived", methods=["GET"])
 @login_required
 @role_required("planner")
 def archived_orders_list():
