@@ -37,7 +37,7 @@ def finish_order(id):
         db.session.rollback()
         current_app.logger.exception(f"Error during transportation order finishing by driver "
                                      f"{current_user.first_name} {current_user.last_name}: {e}")
-        flash(f"Error: {e}, try again")
+        flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("home"))
 
 @driver_bp.route("/orders/archived", methods=["GET"])

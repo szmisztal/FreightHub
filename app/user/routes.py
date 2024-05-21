@@ -16,12 +16,12 @@ def register():
             user = create_user(form)
             db.session.add(user)
             db.session.commit()
-            flash("An error occurred during registration. Please try again.", "danger")
+            flash("Registration successfully, you can log in.", "success")
             return redirect(url_for("user.login"))
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Registration error: {e}")
-            flash(f"Error: {e}, try again")
+            flash(f"Error: {e}, try again", "danger")
             return redirect(url_for("home"))
     return render_template("register.html", form=form)
 

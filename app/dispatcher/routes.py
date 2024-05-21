@@ -40,7 +40,7 @@ def assign_driver(order_id):
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during driver to transportation order assigning: {e}")
-            flash(f"Error: {e}, try again")
+            flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("home"))
     return render_template("assign_driver_form.html", form=form, title="Assign Driver")
 
@@ -58,6 +58,6 @@ def change_assigned_driver(order_id):
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during transportation order`s driver editing: {e}")
-            flash(f"Error: {e}, try again")
+            flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("home"))
     return render_template("assign_driver_form.html", form=form, title="Change Driver")
