@@ -195,7 +195,7 @@ def delete_transportation_order(id):
 @planner_bp.route("/orders/archived", methods=["GET"])
 @login_required
 @role_required("planner")
-def archived_orders_list():
+def archived_transportation_orders():
     archived_orders = TransportationOrder.query.filter_by(completed=True).order_by(TransportationOrder.date).all()
     if not archived_orders:
         flash("There are any archived transportation orders", "info")
