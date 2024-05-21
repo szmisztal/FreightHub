@@ -10,9 +10,26 @@
         <h1>{% block header %}Freight Hub{% endblock %}</h1>
         <nav>
             <ul>
-                <li><a href="{{ url_for('user.register') }}">Register</a></li>
-                <li><a href="{{ url_for('user.login') }}">Login</a></li>
-                <li><a href="{{ url_for('user.logout_confirm') }}">Logout</a></li>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.role == "planner" %}
+                        <li><a href="{{ url_for('planner.new_company') }}">Create new company</a></li>
+                        <li><a href="{{ url_for('planner.companies') }}">Companies list</a></li>
+                        <li><a href="{{ url_for('planner.new_transportation_order') }}">Create new transportation order</a></li>
+                        <li><a href="{{ url_for('planner.transportation_orders') }}">Transportation orders list</a></li>
+                        <li><a href="{{ url_for('planner.archived_transportation_orders') }}">Archived transportation orders list</a></li>
+                    {% elif current_user.role == "dispatcher" %}
+                        <li><a href="{{ url_for('dispatcher.orders_without_drivers') }}">Orders without assigned driver</a></li>
+                        <li><a href="{{ url_for('dispatcher.orders_with_drivers') }}">Orders with assigned driver</a></li>
+                        <li><a href="{{ url_for('dispatcher.assign_driver') }}">Assign driver</a></li>
+                    {% elif current_user.role == "driver" %}
+                        <li><a href="{{ url_for('driver.current_transportation_order') }}">Your current transportation order</a></li>
+                        <li><a href="{{ url_for('driver.completed_orders') }}">Your completed transportation orders</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('user.logout_confirm') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('user.register') }}">Register</a></li>
+                    <li><a href="{{ url_for('user.login') }}">Login</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
@@ -27,7 +44,6 @@
             {% endif %}
         {% endwith %}
         {% block content %}
-        <p></p>
         {% endblock %}
     </main>
 </body>
