@@ -12,12 +12,12 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(16), nullable=False)
 
     def __repr__(self):
-        return f"{self.username} - {self.first_name} {self.last_name} - {self.role}"
+        return f"{self.first_name} {self.last_name} - {self.role}"
 
 class TransportationOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     creation_date = db.Column(db.DateTime, default=dt.datetime.utcnow, nullable=False)
-    creation_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     planned_delivery_date = db.Column(db.Date, nullable=False)
     trailer_type = db.Column(db.String(16), nullable=False)
     load_weight = db.Column(db.Integer, nullable=False)
@@ -26,8 +26,14 @@ class TransportationOrder(db.Model):
     driver = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
     completed = db.Column(db.Boolean, default=False)
 
+    creator = db.relationship("User", backref="created_orders", foreign_keys=[created_by])
+    assigned_driver = db.relationship("User", backref="assigned_orders", foreign_keys=[driver])
+
+    loading_company = db.relationship("Company", backref="loading_orders", foreign_keys=[loading_place])
+    delivery_company = db.relationship("Company", backref="delivery_orders", foreign_keys=[delivery_place])
+
     def __repr__(self):
-        return f"Creation by: {self.creation_by}" \
+        return f"Created by: {self.created_by}" \
                f"\nCreation date: {self.creation_date}" \
                f"\nPlanned delivery date: {self.planned_delivery_date}" \
                f"\nTrailer type: {self.trailer_type}" \
