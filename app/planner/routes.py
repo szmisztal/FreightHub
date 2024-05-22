@@ -76,7 +76,7 @@ def edit_company(id):
             db.session.rollback()
             current_app.logger.exception(f"Error during company editing: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("companies"))
+        return redirect(url_for("planner.companies"))
     return render_template("company_form.html", form=form, title="Edit Company")
 
 @planner_bp.route("/companies/confirm-delete/<int:id>", methods=["GET"])
@@ -100,7 +100,7 @@ def delete_company(id):
         db.session.rollback()
         current_app.logger.exception(f"Error during company deleting: {e}")
         flash(f"Error: {e}, try again", "danger")
-    return redirect(url_for("companies"))
+    return redirect(url_for("planner.companies"))
 
 @planner_bp.route("/orders/new", methods=["GET", "POST"])
 @login_required
@@ -134,18 +134,17 @@ def create_order(form):
 @login_required
 @role_required("planner")
 def transportation_orders():
-    all_orders = TransportationOrder.query.all()
+    all_orders = TransportationOrder.query.filter_by(completed=False).order_by(TransportationOrder.creation_date).all()
     if not all_orders:
         flash("Orders list is empty.", "info")
-        return render_template("transportation_orders_list.html", orders=all_orders)
-    return render_template("transportation_orders_list.html", orders=all_orders)
+    return render_template("transportation_orders_list.html", orders=all_orders, title="Transportation Orders")
 
 @planner_bp.route("/orders/<int:order_id>", methods=["GET"])
 @login_required
 @role_required("planner")
 def transportation_order_details(order_id):
     order = TransportationOrder.query.get_or_404(order_id)
-    return render_template("transportation_order_details.html", ordery=order)
+    return render_template("transportation_order_details.html", order=order)
 
 @planner_bp.route("/orders/edit/<int:id>", methods=["GET", "POST"])
 @login_required
@@ -166,7 +165,7 @@ def edit_transportation_order(id):
             db.session.rollback()
             current_app.logger.exception(f"Error during transportation order editing: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("transportation_orders"))
+        return redirect(url_for("planner.transportation_orders"))
     return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
 
 @planner_bp.route("/orders/confirm-delete/<int:id>", methods=["GET"])
@@ -190,16 +189,15 @@ def delete_transportation_order(id):
         db.session.rollback()
         current_app.logger.exception(f"Error during transportation order deleting: {e}")
         flash(f"Error: {e}, try again", "danger")
-    return redirect(url_for("transportation_orders"))
+    return redirect(url_for("planner.transportation_orders"))
 
 @planner_bp.route("/orders/archived", methods=["GET"])
 @login_required
 @role_required("planner")
 def archived_transportation_orders():
-    archived_orders = TransportationOrder.query.filter_by(completed=True).order_by(TransportationOrder.date).all()
+    archived_orders = TransportationOrder.query.filter_by(completed=True).order_by(TransportationOrder.creation_date).all()
     if not archived_orders:
         flash("There are any archived transportation orders", "info")
-        return redirect(url_for("home"))
-    return render_template("archived_transportation_orders.html", archived_orders=archived_orders)
+    return render_template("transportation_orders_list.html", orders=archived_orders, title="Archived Transportation Orders")
 
 
