@@ -7,6 +7,15 @@
 </head>
 <body>
     <header>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div id="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
         <h1>{% block header %}Freight Hub{% endblock %}</h1>
         <nav>
             <ul>
@@ -20,7 +29,6 @@
                     {% elif current_user.role == "dispatcher" %}
                         <li><a href="{{ url_for('dispatcher.orders_without_drivers') }}">Orders without assigned driver</a></li>
                         <li><a href="{{ url_for('dispatcher.orders_with_drivers') }}">Orders with assigned driver</a></li>
-                        <li><a href="{{ url_for('dispatcher.assign_driver') }}">Assign driver</a></li>
                     {% elif current_user.role == "driver" %}
                         <li><a href="{{ url_for('driver.current_transportation_order') }}">Your current transportation order</a></li>
                         <li><a href="{{ url_for('driver.completed_orders') }}">Your completed transportation orders</a></li>
@@ -34,15 +42,6 @@
         </nav>
     </header>
     <main>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div id="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="flash {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
         {% block content %}
         {% endblock %}
     </main>
