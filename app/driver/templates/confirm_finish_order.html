@@ -11,6 +11,6 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <button type="submit">Complete</button>
     </form>
-    <a href="{{ url_for('current_transportation_order') }}">Cancel</a>
+    <a href="{{ url_for('driver.current_transportation_order') }}">Cancel</a>
 </div>
 {% endblock %}

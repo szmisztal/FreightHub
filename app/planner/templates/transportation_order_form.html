@@ -9,16 +9,19 @@
     <form method="post">
         {{ form.hidden_tag() }}
         <div>
-            {{ form.trailer_type.label }} {{ form.trailer_type(size=20) }}<br>
+            {{ form.planned_delivery_date.label }} {{ form.planned_delivery_date }}<br>
         </div>
         <div>
-            {{ form.load_weight.label }} {{ form.load_weight(size=20) }}<br>
+            {{ form.trailer_type.label }} {{ form.trailer_type }}<br>
         </div>
         <div>
-            {{ form.loading_place.label }} {{ form.loading_place(size=20) }}<br>
+            {{ form.load_weight.label }} {{ form.load_weight }}<br>
         </div>
         <div>
-            {{ form.delivery_place.label }} {{ form.delivery_place(size=20) }}<br>
+            {{ form.loading_place.label }} {{ form.loading_place }}<br>
+        </div>
+        <div>
+            {{ form.delivery_place.label }} {{ form.delivery_place }}<br>
         </div>
         <div>
             {{ form.submit() }}

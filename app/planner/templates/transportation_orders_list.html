@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Transportation Orders List{% endblock %}
+{% block title %} {{ title }} {% endblock %}
 
-{% block header %}Transportation Orders List{% endblock %}
+{% block header %} {{ title }} {% endblock %}
 
 {% block content %}
 <body>
-    <h1>Transportation Orders List</h1>
+    <h1> {{ title }} </h1>
     <ul>
         {% for order in orders %}
             <li>
-                <a href="{{ url_for('transportation_order_details', order_id=order.id) }}">
-                    {{ order }}
+                <a href="{{ url_for('planner.transportation_order_details', order_id=order.id) }}">
+                    {{ order.planned_delivery_date }}, {{ order.trailer_type }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
                 </a>
             </li>
         {% endfor %}

@@ -10,8 +10,9 @@
     <ul>
         {% for company in companies %}
             <li>
-                <a href="{{ url_for('company_details', company_id=company.id) }}">
-                    {{ company.name }} - {{ company.country }}, {{ company.street }} {{ company.street_number }}
+                <a href="{{ url_for('planner.company_details', company_id=company.id) }}">
+                    {{ company.company_name }} - {{ company.country }}, {{ company.street }} {{ company.street_number }},
+                    {{ company.postal_code }} {{ company.town }}
                 </a>
             </li>
         {% endfor %}
