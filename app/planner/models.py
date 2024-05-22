@@ -11,10 +11,6 @@ class Company(db.Model):
     phone_number = db.Column(db.String(32), nullable=False)
 
     def __repr__(self):
-        return f"Name: {self.company_name}" \
-               f"\nCountry: {self.country}" \
-               f"\nTown: {self.town}" \
-               f"\nPostal code: {self.postal_code}" \
-               f"\nStreet: {self.street} {self.street_number}" \
-               f"\nPhone number: {self.phone_number}"
+        return f"{self.company_name} - {self.country}, {self.street} {self.street_number}, {self.postal_code} {self.town}, {self.phone_number}"
+
 
