@@ -5,11 +5,11 @@
 {% block header %}{{ title }} Form{% endblock %}
 
 {% block content %}
-<div class="transportation_order-form">
+<div class="assign_driver-form">
     <form method="post">
         {{ form.hidden_tag() }}
         <div>
-            {{ form.driver.label }} {{ form.driver(size=20) }}<br>
+            {{ form.driver.label }} {{ form.driver }}<br>
         </div>
         <div>
             {{ form.submit() }}

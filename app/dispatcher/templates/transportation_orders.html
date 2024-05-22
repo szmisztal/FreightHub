@@ -10,9 +10,15 @@
     <ul>
         {% for order in orders %}
             <li>
-                <a href="{{ url_for('dispatcher.assign_driver', order_id=order.id) }}">
-                    {{ order.planned_delivery_date }}, {{ order.trailer_type }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
-                </a>
+                {% if order.assigned_driver %}
+                    <a href="{{ url_for('dispatcher.change_assigned_driver', order_id=order.id) }}">
+                        {{ order.assigned_driver }} : {{ order.planned_delivery_date }}, {{ order.trailer_type }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('dispatcher.assign_driver', order_id=order.id) }}">
+                        {{ order.planned_delivery_date }}, {{ order.trailer_type }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
+                    </a>
+                {% endif %}
             </li>
         {% endfor %}
     </ul>
