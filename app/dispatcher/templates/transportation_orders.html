@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ title }} {% endblock %}
+
+{% block header %} {{ title }} {% endblock %}
+
+{% block content %}
+<body>
+    <h1> {{ title }} </h1>
+    <ul>
+        {% for order in orders %}
+            <li>
+                <a href="{{ url_for('dispatcher.assign_driver', order_id=order.id) }}">
+                    {{ order.planned_delivery_date }}, {{ order.trailer_type }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}
