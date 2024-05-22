@@ -34,7 +34,7 @@ def assign_driver(order_id):
         try:
             order.driver = form.driver.data
             db.session.commit()
-            flash(f"{order.driver.first_name} {order.driver.last_name} has been assigned to the order.", "success")
+            flash(f"{order.assigned_driver} has been assigned to the order.", "success")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during driver to transportation order assigning: {e}")
@@ -50,7 +50,10 @@ def change_assigned_driver(order_id):
     form = AssignDriverForm(obj=order)
     if form.validate_on_submit():
         try:
-            order.driver = form.driver.data
+            if form.driver.data == "0":
+                order.driver = None
+            else:
+                order.driver = form.driver.data
             db.session.commit()
             flash("The driver change was successful", "success")
         except Exception as e:
