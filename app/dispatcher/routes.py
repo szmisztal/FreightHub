@@ -10,21 +10,19 @@ from .forms import AssignDriverForm
 @login_required
 @role_required("dispatcher")
 def orders_without_drivers():
-    orders = TransportationOrder.query.filter_by(driver=None).order_by(TransportationOrder.date).all()
+    orders = TransportationOrder.query.filter_by(driver=None).order_by(TransportationOrder.planned_delivery_date).all()
     if not orders:
         flash("Every transportation order has assigned driver", "info")
-        return redirect(url_for("home"))
-    return render_template("transportation_orders_list.html", orders=orders, title="Unassigned Orders")
+    return render_template("transportation_orders.html", orders=orders, title="Unassigned Orders")
 
 @dispatcher_bp.route("/orders/with-drivers", methods=["GET"])
 @login_required
 @role_required("dispatcher")
 def orders_with_drivers():
-    orders = TransportationOrder.query.filter(TransportationOrder.driver.isnot(None)).order_by(TransportationOrder.date).all()
+    orders = TransportationOrder.query.filter(TransportationOrder.driver.isnot(None)).order_by(TransportationOrder.planned_delivery_date).all()
     if not orders:
         flash("None transportation order has assigned driver", "info")
-        return redirect(url_for("home"))
-    return render_template("transportation_orders_list.html", orders=orders, title="Assigned Orders")
+    return render_template("transportation_orders.html", orders=orders, title="Assigned Orders")
 
 @dispatcher_bp.route("/orders/assign-driver/<int:order_id>", methods=["GET", "POST"])
 @login_required
