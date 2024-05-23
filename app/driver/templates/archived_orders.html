@@ -9,11 +9,11 @@
     <ul>
         {% for order in archived_orders %}
             <li>
-              <p>Date: {{ order.date }}</p>
+              <p>Date: {{ order.planned_delivery_date }}</p>
               <p>Trailer Type: {{ order.trailer_type }}</p>
               <p>Load Weight: {{ order.load_weight }}</p>
-              <p>Loading Place: {{ order.loading_place }}</p>
-              <p>Delivery Place: {{ order.delivery_place }}</p>
+              <p>Loading Place: {{ order.loading_company }}</p>
+              <p>Delivery Place: {{ order.delivery_company }}</p>
             </li>
         {% endfor %}
     </ul>
