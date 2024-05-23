@@ -10,6 +10,9 @@
         {{ form.hidden_tag() }}
         <div>
             {{ form.planned_delivery_date.label }} {{ form.planned_delivery_date }}<br>
+            {% for error in form.planned_delivery_date.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
         </div>
         <div>
             {{ form.trailer_type.label }} {{ form.trailer_type }}<br>
