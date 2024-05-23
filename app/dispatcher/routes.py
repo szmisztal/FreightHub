@@ -10,7 +10,7 @@ from .forms import AssignDriverForm
 @login_required
 @role_required("dispatcher")
 def orders_without_drivers():
-    orders = TransportationOrder.query.filter_by(driver=None).order_by(TransportationOrder.planned_delivery_date).all()
+    orders = TransportationOrder.query.filter_by(driver=None, completed=False).order_by(TransportationOrder.planned_delivery_date).all()
     if not orders:
         flash("Every transportation order has assigned driver", "info")
     return render_template("transportation_orders.html", orders=orders, title="Unassigned Orders")
@@ -19,7 +19,7 @@ def orders_without_drivers():
 @login_required
 @role_required("dispatcher")
 def orders_with_drivers():
-    orders = TransportationOrder.query.filter(TransportationOrder.driver.isnot(None)).order_by(TransportationOrder.planned_delivery_date).all()
+    orders = TransportationOrder.query.filter(TransportationOrder.driver.isnot(None)).filter_by(completed=False).order_by(TransportationOrder.planned_delivery_date).all()
     if not orders:
         flash("None transportation order has assigned driver", "info")
     return render_template("transportation_orders.html", orders=orders, title="Assigned Orders")
