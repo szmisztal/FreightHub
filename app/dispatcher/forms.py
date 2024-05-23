@@ -13,6 +13,14 @@ class AssignDriverForm(FlaskForm):
         self.driver.choices = [(0, "No Driver")] + [(u.id, f"{u.first_name} {u.last_name}") for u in self.get_available_drivers()]
 
     def get_available_drivers(self):
-        assigned_driver_ids = db.session.query(TransportationOrder.driver).filter(TransportationOrder.driver.isnot(None)).distinct()
-        available_drivers = User.query.filter(User.role == "driver", User.id.notin_(assigned_driver_ids)).all()
+        active_driver_ids = db.session.query(TransportationOrder.driver).filter(
+            TransportationOrder.completed == False,
+            TransportationOrder.driver.isnot(None)
+        ).distinct().subquery()
+
+        available_drivers = User.query.filter(
+            User.role == "driver",
+            User.id.notin_(active_driver_ids)
+        ).all()
+        
         return available_drivers
