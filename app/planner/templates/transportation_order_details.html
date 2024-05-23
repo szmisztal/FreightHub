@@ -15,11 +15,13 @@
     <p>Load Weight: {{ order.load_weight }}</p>
     <p>Loading Place: {{ order.loading_company }}</p>
     <p>Delivery Place: {{ order.delivery_company }}</p>
-    <p>Completed: {{ order.completed }}</p>
     {% if not order.completed %}
         <a href="{{ url_for('planner.edit_transportation_order', id=order.id) }}">Edit</a><br>
         <a href="{{ url_for('planner.confirm_transportation_order_delete', id=order.id) }}">Delete</a><br>
+        <a href="{{ url_for('planner.transportation_orders') }}">Back to list</a><br>
+    {% else %}
+        <p>Completed by: {{ order.assigned_driver }}</p>
+        <a href="{{ url_for('planner.archived_transportation_orders') }}">Back to list</a><br>
     {% endif %}
-    <a href="{{ url_for('planner.transportation_orders') }}">Back to list</a><br>
 </body>
 {% endblock %}
