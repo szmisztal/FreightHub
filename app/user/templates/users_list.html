@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Users List{% endblock %}
+
+{% block header %}Users List{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Users List</h1>
+    <h3>Planners:</h3>
+    <ul>
+        {% for planner in planners %}
+            <li>
+                <p>{{ planner.first_name }} {{ planner.last_name }} - {{ planner.email }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <h3>Dispatchers:</h3>
+    <ul>
+        {% for dispatcher in dispatchers %}
+            <li>
+                <p>{{ dispatcher.first_name }} {{ dispatcher.last_name }} - {{ dispatcher.email }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <h3>Drivers:</h3>
+    <ul>
+        {% for driver in drivers %}
+            <li>
+                <p>{{ driver.first_name }} {{ driver.last_name }} - {{ driver.email }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}
