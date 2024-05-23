@@ -22,5 +22,5 @@ class AssignDriverForm(FlaskForm):
             User.role == "driver",
             User.id.notin_(active_driver_ids)
         ).all()
-        
+
         return available_drivers
