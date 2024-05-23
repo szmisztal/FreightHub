@@ -70,3 +70,12 @@ def logout():
 @login_required
 def logout_confirm():
     return render_template("logout_confirm.html")
+
+@user_bp.route("/all", methods=["GET"])
+@login_required
+def users_list():
+    users = User.query.all()
+    planners = [user for user in users if user.role == "planner"]
+    dispatchers = [user for user in users if user.role == "dispatcher"]
+    drivers = [user for user in users if user.role == "driver"]
+    return render_template("users_list.html", planners=planners, dispatchers=dispatchers, drivers=drivers)
