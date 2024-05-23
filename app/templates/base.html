@@ -33,6 +33,7 @@
                         <li><a href="{{ url_for('driver.current_transportation_order') }}">Your current transportation order</a></li>
                         <li><a href="{{ url_for('driver.completed_orders') }}">Your completed transportation orders</a></li>
                     {% endif %}
+                    <li><a href="{{ url_for('user.users_list') }}">Users list</a> </li>
                     <li><a href="{{ url_for('user.logout_confirm') }}">Logout</a></li>
                 {% else %}
                     <li><a href="{{ url_for('user.register') }}">Register</a></li>
