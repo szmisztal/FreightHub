@@ -10,11 +10,11 @@ from . import driver_bp
 @login_required
 @role_required("driver")
 def current_transportation_order():
-    current_order = TransportationOrder.query.filter_by(driver=current_user.id).first()
-    if not current_order:
+    order = TransportationOrder.query.filter_by(driver=current_user.id, completed=False).first()
+    if not order:
         flash("You don’t have any orders right now", "info")
         return redirect(url_for("home"))
-    return render_template("current_order.html", current_order=current_order)
+    return render_template("current_order.html", order=order)
 
 @driver_bp.route("/orders/confirm-finish-order/<int:id>", methods=["GET"])
 @login_required
@@ -44,7 +44,7 @@ def finish_order(id):
 @login_required
 @role_required("driver")
 def completed_orders():
-    archived_orders = TransportationOrder.query.filter_by(driver=current_user.id, completed=True).order_by(TransportationOrder.date).all()
+    archived_orders = TransportationOrder.query.filter_by(driver=current_user.id, completed=True).order_by(TransportationOrder.planned_delivery_date).all()
     if not archived_orders:
         flash("You don’t have any archived orders", "info")
         return redirect(url_for("home"))
