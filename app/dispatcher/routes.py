@@ -8,7 +8,7 @@ from . import dispatcher_bp
 from .forms import AssignDriverForm, TractorHeadForm, TrailerForm
 from .models import TractorHead, Trailer
 
-@dispatcher_bp.route("/tractor_heads/new", methotds=["GET", "POST"])
+@dispatcher_bp.route("/tractor_heads/new", methods=["GET", "POST"])
 @login_required
 @role_required("dispatcher")
 def new_tractor_head():
@@ -90,7 +90,7 @@ def delete_tractor_head(id):
         flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("dispatcher.tractor_heads"))
 
-@dispatcher_bp.route("/trailers/new", methotds=["GET", "POST"])
+@dispatcher_bp.route("/trailers/new", methods=["GET", "POST"])
 @login_required
 @role_required("dispatcher")
 def new_trailer():
