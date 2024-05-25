@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Trailer Delete{% endblock %}
+
+{% block header %}Trailer Delete{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Are you sure you want to delete {{ trailer }}?</h1>
+    <form action="{{ url_for('dispatcher.delete_trailer', id=trailer.id) }}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit">Delete</button>
+    </form>
+    <a href="{{ url_for('dispatcher.trailers') }}">Cancel</a>
+</div>
+{% endblock %}

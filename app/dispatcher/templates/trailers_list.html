@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Trailers List{% endblock %}
+
+{% block header %}Trailers List{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Trailers List</h1>
+    <ul>
+        {% for trailer in trailers %}
+            <li>
+                <a href="{{ url_for('dispatcher.trailer_details', id=trailer.id) }}">
+                    {{ trailer }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}

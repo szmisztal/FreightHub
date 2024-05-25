@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Trailer Details{% endblock %}
+
+{% block header %}Trailer Details{% endblock %}
+
+{% block content %}
+<body>
+    <p>Type: {{ trailer.type }}</p>
+    <p>Registration number: {{ trailer.registration_number }}</p>
+    <a href="{{ url_for('dispatcher.edit_trailer', id=trailer.id) }}">Edit</a><br>
+    <a href="{{ url_for('dispatcher.confirm_trailer_delete', id=trailer.id) }}">Delete</a><br>
+    <a href="{{ url_for('dispatcher.trailers') }}">Back to list</a><br>
+</body>
+{% endblock %}

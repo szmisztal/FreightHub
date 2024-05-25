@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Tracktor Heads List{% endblock %}
+
+{% block header %}Tracktor Heads List{% endblock %}
+
+{% block content %}
+<body>
+    <h1>Tracktor Heads List</h1>
+    <ul>
+        {% for tracktor_head in tracktor_heads %}
+            <li>
+                <a href="{{ url_for('dispatcher.tracktor_head_details', id=tracktor_head.id) }}">
+                    {{ tracktor_head }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+{% endblock %}

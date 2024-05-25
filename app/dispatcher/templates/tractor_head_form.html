@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block header %}{{ title }} Form{% endblock %}
+
+{% block content %}
+<div class="tracktor_head-form">
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.brand.label }} {{ form.brand(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.registration_number.label }} {{ form.registration_number(size=20) }}<br>
+        </div>
+        <div>
+            {{ form.submit() }}
+        </div>
+    </form>
+</div>
+{% endblock %}

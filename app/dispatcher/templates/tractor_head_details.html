@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Tracktor Head Details{% endblock %}
+
+{% block header %}Tracktor Head Details{% endblock %}
+
+{% block content %}
+<body>
+    <p>Brand: {{ tracktor_head.brand }}</p>
+    <p>Registration number: {{ tracktor_head.registration_number }}</p>
+    <a href="{{ url_for('dispatcher.edit_tracktor_head', id=tracktor_head.id) }}">Edit</a><br>
+    <a href="{{ url_for('dispatcher.confirm_tracktor_head_delete', id=tracktor_head.id) }}">Delete</a><br>
+    <a href="{{ url_for('dispatcher.tracktor_heads') }}">Back to list</a><br>
+</body>
+{% endblock %}
