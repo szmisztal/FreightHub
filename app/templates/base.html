@@ -27,6 +27,10 @@
                         <li><a href="{{ url_for('planner.transportation_orders') }}">Transportation orders list</a></li>
                         <li><a href="{{ url_for('planner.archived_transportation_orders') }}">Archived transportation orders list</a></li>
                     {% elif current_user.role == "dispatcher" %}
+                        <li><a href="{{ url_for('dispatcher.new_tractor_head') }}">Add new tractor head</a> </li>
+                        <li><a href="{{ url_for('dispatcher.tractor_heads') }}">Tractor heads list</a> </li>
+                        <li><a href="{{ url_for('dispatcher.new_trailer') }}">Add new trailer</a> </li>
+                        <li><a href="{{ url_for('dispatcher.trailers') }}">Trailers list</a> </li>
                         <li><a href="{{ url_for('dispatcher.orders_without_drivers') }}">Orders without assigned driver</a></li>
                         <li><a href="{{ url_for('dispatcher.orders_with_drivers') }}">Orders with assigned driver</a></li>
                     {% elif current_user.role == "driver" %}
