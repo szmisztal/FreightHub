@@ -44,15 +44,14 @@ def companies():
     all_companies = Company.query.all()
     if not all_companies:
         flash("Companies list is empty.", "info")
-        return render_template("companies_list.html", companies=all_companies)
     return render_template("companies_list.html", companies=all_companies)
 
 
-@planner_bp.route("/companies/<int:company_id>", methods=["GET"])
+@planner_bp.route("/companies/<int:id>", methods=["GET"])
 @login_required
 @role_required("planner")
-def company_details(company_id):
-    company = Company.query.get_or_404(company_id)
+def company_details(id):
+    company = Company.query.get_or_404(id)
     return render_template("company_details.html", company=company)
 
 @planner_bp.route("/companies/edit/<int:id>", methods=["GET", "POST"])
@@ -139,11 +138,11 @@ def transportation_orders():
         flash("Orders list is empty.", "info")
     return render_template("transportation_orders_list.html", orders=all_orders, title="Transportation Orders")
 
-@planner_bp.route("/orders/<int:order_id>", methods=["GET"])
+@planner_bp.route("/orders/<int:id>", methods=["GET"])
 @login_required
 @role_required("planner")
-def transportation_order_details(order_id):
-    order = TransportationOrder.query.get_or_404(order_id)
+def transportation_order_details(id):
+    order = TransportationOrder.query.get_or_404(id)
     return render_template("transportation_order_details.html", order=order)
 
 @planner_bp.route("/orders/edit/<int:id>", methods=["GET", "POST"])
