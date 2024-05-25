@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, current_user, login_required
+from sqlalchemy.exc import IntegrityError
 from app import db, bcrypt
 from app.common.models import User
 from . import user_bp
@@ -10,26 +11,20 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         try:
-            if user_exists(form.username.data, form.email.data):
-                flash("Username or email already registered.", "warning")
-                return render_template("register.html", form=form)
             user = create_user(form)
             db.session.add(user)
             db.session.commit()
             flash("Registration successfully, you can log in.", "success")
             return redirect(url_for("user.login"))
+        except IntegrityError as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Registration error: {e}")
+            flash(f"Username or email in used, choose another", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Registration error: {e}")
             flash(f"Error: {e}, try again", "danger")
-            return redirect(url_for("home"))
-    return render_template("register.html", form=form)
-
-def user_exists(username, email):
-    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
-    if existing_user:
-        return True
-    return False
+    return render_template("register.html", form=form, title="Registration")
 
 def create_user(form):
     hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
@@ -37,10 +32,42 @@ def create_user(form):
         username=form.username.data,
         first_name=form.first_name.data,
         last_name=form.last_name.data,
+        phone_number=form.phone_number.data,
         email=form.email.data,
         password_hash=hashed_password,
         role=form.role.data
     )
+
+@user_bp.route("/change_data/<int:id>", methods=["GET", "POST"])
+@login_required
+def edit_user_data(id):
+    if current_user.id != id:
+        flash("You don't have permission to edit this user's data.", "danger")
+        return redirect(url_for("home"))
+    user = User.query.get_or_404(id)
+    form = RegistrationForm(obj=user)
+    if form.validate_on_submit():
+        try:
+            hashed_password = bcrypt.generate_password_hash(form.password.data).decode("utf-8")
+            user.username=form.username.data
+            user.first_name=form.first_name.data
+            user.last_name=form.last_name.data
+            user.phone_number=form.phone_number.data
+            user.email=form.email.data
+            user.password_hash=hashed_password
+            user.role=form.role.data
+            db.session.commit()
+            flash("Your user data updated successfully.", "success")
+            return redirect(url_for("home"))
+        except IntegrityError as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Registration error: {e}")
+            flash(f"Username or email in used, choose another", "danger")
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Error during user data editing: {e}")
+            flash(f"Error: {e}, try again", "danger")
+    return render_template("register.html", form=form, title="User Data Edit")
 
 @user_bp.route("/login", methods=["GET", "POST"])
 def login():
