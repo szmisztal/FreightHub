@@ -21,6 +21,8 @@ class TransportationOrder(db.Model):
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     planned_delivery_date = db.Column(db.Date, nullable=False)
     trailer_type = db.Column(db.String(16), nullable=False)
+    tractor_head = db.Column(db.Integer, db.ForeignKey("tractor_head.id", nullable=True))
+    trailer = db.Column(db.Integer, db.ForeignKey("trailer.id", nullable=True))
     load_weight = db.Column(db.Integer, nullable=False)
     loading_place = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
     delivery_place = db.Column(db.Integer, db.ForeignKey("company.id"), nullable=False)
@@ -30,6 +32,9 @@ class TransportationOrder(db.Model):
     creator = db.relationship("User", backref="created_orders", foreign_keys=[created_by])
     assigned_driver = db.relationship("User", backref="assigned_orders", foreign_keys=[driver])
 
+    assigned_tractor_head = db.relationship("TractorHead", backref="assigned_orders", foreing_keys=[tractor_head])
+    assigned_trailer = db.relationship("Trailer", backref="assigned_orders", foreign_keys=[trailer])
+
     loading_company = db.relationship("Company", backref="loading_orders", foreign_keys=[loading_place])
     delivery_company = db.relationship("Company", backref="delivery_orders", foreign_keys=[delivery_place])
 
@@ -38,6 +43,8 @@ class TransportationOrder(db.Model):
                f"\nCreation date: {self.creation_date}" \
                f"\nPlanned delivery date: {self.planned_delivery_date}" \
                f"\nTrailer type: {self.trailer_type}" \
+               f"\nTractor head: {self.tractor_head}" \
+               f"\nTrailer: {self.trailer}" \
                f"\nLoad weight: {self.load_weight}" \
                f"\nLoading place: {self.loading_place}" \
                f"\nDelivery place: {self.delivery_place}" \
