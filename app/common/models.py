@@ -7,12 +7,13 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(16), unique=True, nullable=False)
     first_name = db.Column(db.String(16), nullable=False)
     last_name = db.Column(db.String(32), nullable=False)
+    phone_number = db.Column(db.String(32), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     role = db.Column(db.String(16), nullable=False)
 
     def __repr__(self):
-        return f"{self.first_name} {self.last_name} - {self.role}"
+        return f"{self.first_name} {self.last_name} - {self.phone_number} - {self.role}"
 
 class TransportationOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
