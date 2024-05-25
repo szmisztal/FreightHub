@@ -3,6 +3,7 @@ from wtforms import SelectField, SubmitField, StringField
 from wtforms.validators import DataRequired
 from app import db
 from app.common.models import User, TransportationOrder
+from .models import TractorHead, Trailer
 
 class TractorHeadForm(FlaskForm):
     brand = StringField("Brand", validators=[DataRequired()])
@@ -23,6 +24,8 @@ class TrailerForm(FlaskForm):
 
 class AssignDriverForm(FlaskForm):
     driver = SelectField("Driver", choices=[], validators=[DataRequired()])
+    tractor_head = SelectField("Tractor Head", choices=[], validators=[DataRequired()])
+    trailer = SelectField("Trailer", choices=[], validators=[DataRequired()])
     submit = SubmitField("Submit")
 
     def __init__(self, *args, **kwargs):
