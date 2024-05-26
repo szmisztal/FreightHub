@@ -2,6 +2,7 @@ from datetime import date
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, SelectField, DateField
 from wtforms.validators import Length, DataRequired, NumberRange, ValidationError
+from app.common.models import Trailer
 from .models import Company
 
 class CompanyForm(FlaskForm):
@@ -20,14 +21,7 @@ def validate_future_date(form, field):
 
 class TransportationOrderForm(FlaskForm):
     planned_delivery_date = DateField("Planned delivery date", validators=[DataRequired(), validate_future_date])
-    trailer_type = SelectField("Trailer type", choices=[("Curtain side", "Curtain-side trailer"),
-                                                        ("Refrigerated", "Refrigerated trailer"),
-                                                        ("Tipper", "Tipper trailer"),
-                                                        ("Low loader","Low-loader trailer"),
-                                                        ("Container", "Container trailer"),
-                                                        ("Self-unloading", "Self-unloading trailer"),
-                                                        ("Insulated", "Insulated trailer")],
-                                               validators=[DataRequired()])
+    trailer_type = SelectField("Trailer type", choices=[], validators=[DataRequired()])
     load_weight = IntegerField("Load weight", validators=[DataRequired(), NumberRange(min=1,
                                                                                        max=24000,
                                                                                        message="Weight must be in range 1-24000")])
@@ -39,5 +33,6 @@ class TransportationOrderForm(FlaskForm):
         super(TransportationOrderForm, self).__init__(*args, **kwargs)
         self.loading_place.choices = [(c.id, c.company_name) for c in Company.query.all()]
         self.delivery_place.choices = [(c.id, c.company_name) for c in Company.query.all()]
+        self.trailer_type.choices = [(t.type, t.type) for t in Trailer.query.with_entities(Trailer.type).distinct()]
 
 
