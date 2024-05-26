@@ -3,10 +3,10 @@ from flask_login import login_required
 from flask_wtf.csrf import generate_csrf
 from app import db
 from app.common.permissions import role_required
-from app.common.models import TransportationOrder
+from app.common.models import TransportationOrder, Trailer
 from . import dispatcher_bp
 from .forms import AssignDriverForm, TractorHeadForm, TrailerForm
-from .models import TractorHead, Trailer
+from .models import TractorHead
 
 @dispatcher_bp.route("/tractor_heads/new", methods=["GET", "POST"])
 @login_required
