@@ -31,8 +31,7 @@
                         <li><a href="{{ url_for('dispatcher.tractor_heads') }}">Tractor heads list</a> </li>
                         <li><a href="{{ url_for('dispatcher.new_trailer') }}">Add new trailer</a> </li>
                         <li><a href="{{ url_for('dispatcher.trailers') }}">Trailers list</a> </li>
-                        <li><a href="{{ url_for('dispatcher.orders_without_drivers') }}">Orders without assigned driver</a></li>
-                        <li><a href="{{ url_for('dispatcher.orders_with_drivers') }}">Orders with assigned driver</a></li>
+                        <li><a href="{{ url_for('dispatcher.active_transport_orders') }}">Active Transport Orders</a></li>
                     {% elif current_user.role == "driver" %}
                         <li><a href="{{ url_for('driver.current_transportation_order') }}">Your current transportation order</a></li>
                         <li><a href="{{ url_for('driver.completed_orders') }}">Your completed transportation orders</a></li>
