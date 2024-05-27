@@ -5,7 +5,7 @@ from app import db
 from app.common.permissions import role_required
 from app.common.models import TransportationOrder, Trailer
 from . import dispatcher_bp
-from .forms import AssignDriverForm, TractorHeadForm, TrailerForm
+from .forms import CompletingTheTransportationOrderForm, TractorHeadForm, TrailerForm
 from .models import TractorHead
 
 @dispatcher_bp.route("/tractor_heads/new", methods=["GET", "POST"])
@@ -39,7 +39,7 @@ def tractor_heads():
     all_tractor_heads = TractorHead.query.all()
     if not all_tractor_heads:
         flash("Tractor heads list is empty.", "info")
-    return render_template("tractor_heads_list.html", tractor_heads=tractor_heads)
+    return render_template("tractor_heads_list.html", tractor_heads=all_tractor_heads)
 
 @dispatcher_bp.route("/tractor_heads/<int:id>", methods=["GET"])
 @login_required
@@ -53,7 +53,7 @@ def tractor_head_details(id):
 @role_required("dispatcher")
 def edit_tractor_head(id):
     tractor_head = TractorHead.query.get_or_404(id)
-    form = TractorHead(obj=tractor_head)
+    form = TractorHeadForm(obj=tractor_head)
     if form.validate_on_submit():
         try:
             tractor_head.brand = form.brand.data
@@ -121,7 +121,7 @@ def trailers():
     all_trailers = Trailer.query.all()
     if not all_trailers:
         flash("Trailers list is empty.", "info")
-    return render_template("trailers_list.html", trailers=trailers)
+    return render_template("trailers_list.html", trailers=all_trailers)
 
 @dispatcher_bp.route("/trailers/<int:id>", methods=["GET"])
 @login_required
@@ -135,7 +135,7 @@ def trailer_details(id):
 @role_required("dispatcher")
 def edit_trailer(id):
     trailer = Trailer.query.get_or_404(id)
-    form = Trailer(obj=trailer)
+    form = TrailerForm(obj=trailer)
     if form.validate_on_submit():
         try:
             trailer.type = form.type.data
@@ -172,59 +172,32 @@ def delete_trailer(id):
         flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("dispatcher.trailers"))
 
-@dispatcher_bp.route("/orders/without-drivers", methods=["GET"])
+@dispatcher_bp.route("/orders/active", methods=["GET"])
 @login_required
 @role_required("dispatcher")
-def orders_without_drivers():
-    orders = TransportationOrder.query.filter_by(driver=None, completed=False).order_by(TransportationOrder.planned_delivery_date).all()
+def active_transport_orders():
+    orders = TransportationOrder.query.filter_by(completed=False).order_by(TransportationOrder.planned_delivery_date).all()
     if not orders:
-        flash("Every transportation order has assigned driver", "info")
-    return render_template("transportation_orders.html", orders=orders, title="Unassigned Orders")
+        flash("There are no orders yet", "info")
+    return render_template("transportation_orders.html", orders=orders)
 
-@dispatcher_bp.route("/orders/with-drivers", methods=["GET"])
+@dispatcher_bp.route("/orders/complete/<int:id>", methods=["GET", "POST"])
 @login_required
 @role_required("dispatcher")
-def orders_with_drivers():
-    orders = TransportationOrder.query.filter(TransportationOrder.driver.isnot(None)).filter_by(completed=False).order_by(TransportationOrder.planned_delivery_date).all()
-    if not orders:
-        flash("None transportation order has assigned driver", "info")
-    return render_template("transportation_orders.html", orders=orders, title="Assigned Orders")
-
-@dispatcher_bp.route("/orders/assign-driver/<int:id>", methods=["GET", "POST"])
-@login_required
-@role_required("dispatcher")
-def assign_driver(id):
+def complete_the_order(id):
     order = TransportationOrder.query.get_or_404(id)
-    form = AssignDriverForm()
+    form = CompletingTheTransportationOrderForm(obj=order)
     if form.validate_on_submit():
         try:
-            order.driver = form.driver.data
+            order.driver = form.driver.data if form.driver.data != "0" else None
+            order.tractor_head = form.tractor_head.data if form.tractor_head.data != "0" else None
+            order.trailer = form.trailer.data if form.trailer.data != "0" else None
             db.session.commit()
-            flash(f"{order.assigned_driver} has been assigned to the order.", "success")
+            flash("Successfully completed the order", "success")
         except Exception as e:
             db.session.rollback()
-            current_app.logger.exception(f"Error during driver to transportation order assigning: {e}")
+            current_app.logger.exception(f"Error during completing the order: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("home"))
-    return render_template("assign_driver_form.html", form=form, title="Assign Driver")
+        return redirect(url_for("dispatcher.active_transport_orders", id=id))
+    return render_template("completing_the_order_form.html", form=form)
 
-@dispatcher_bp.route("/orders/change-driver/<int:id>", methods=["GET", "POST"])
-@login_required
-@role_required("dispatcher")
-def change_assigned_driver(id):
-    order = TransportationOrder.query.get_or_404(id)
-    form = AssignDriverForm(obj=order)
-    if form.validate_on_submit():
-        try:
-            if form.driver.data == "0":
-                order.driver = None
-            else:
-                order.driver = form.driver.data
-            db.session.commit()
-            flash("The driver change was successful", "success")
-        except Exception as e:
-            db.session.rollback()
-            current_app.logger.exception(f"Error during transportation order`s driver editing: {e}")
-            flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("home"))
-    return render_template("assign_driver_form.html", form=form, title="Change Driver")
