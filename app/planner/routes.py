@@ -62,7 +62,7 @@ def edit_company(id):
     form = CompanyForm(obj=company)
     if form.validate_on_submit():
         try:
-            company.name = form.company_name.data
+            company.company_name = form.company_name.data
             company.country = form.country.data
             company.town = form.town.data
             company.postal_code = form.postal_code.data
@@ -101,7 +101,7 @@ def delete_company(id):
         flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("planner.companies"))
 
-@planner_bp.route("/orders/new", methods=["GET", "POST"])
+@planner_bp.route("/transportation_orders/new", methods=["GET", "POST"])
 @login_required
 @role_required("planner")
 def new_transportation_order():
@@ -129,7 +129,7 @@ def create_order(form):
         delivery_place=form.delivery_place.data
     )
 
-@planner_bp.route("/orders", methods=["GET"])
+@planner_bp.route("/transportation_orders", methods=["GET"])
 @login_required
 @role_required("planner")
 def transportation_orders():
@@ -138,14 +138,14 @@ def transportation_orders():
         flash("Orders list is empty.", "info")
     return render_template("transportation_orders_list.html", orders=all_orders, title="Transportation Orders")
 
-@planner_bp.route("/orders/<int:id>", methods=["GET"])
+@planner_bp.route("/transportation_orders/<int:id>", methods=["GET"])
 @login_required
 @role_required("planner")
 def transportation_order_details(id):
     order = TransportationOrder.query.get_or_404(id)
     return render_template("transportation_order_details.html", order=order)
 
-@planner_bp.route("/orders/edit/<int:id>", methods=["GET", "POST"])
+@planner_bp.route("/transportation_orders/edit/<int:id>", methods=["GET", "POST"])
 @login_required
 @role_required("planner")
 def edit_transportation_order(id):
@@ -167,7 +167,7 @@ def edit_transportation_order(id):
         return redirect(url_for("planner.transportation_orders"))
     return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
 
-@planner_bp.route("/orders/confirm-delete/<int:id>", methods=["GET"])
+@planner_bp.route("/transportation_orders/confirm-delete/<int:id>", methods=["GET"])
 @login_required
 @role_required("planner")
 def confirm_transportation_order_delete(id):
@@ -175,7 +175,7 @@ def confirm_transportation_order_delete(id):
     csrf_token = generate_csrf()
     return render_template("confirm_transportation_order_delete.html", csrf_token=csrf_token, order=order)
 
-@planner_bp.route("/orders/delete/<int:id>", methods=["POST"])
+@planner_bp.route("/transportation_orders/delete/<int:id>", methods=["POST"])
 @login_required
 @role_required("planner")
 def delete_transportation_order(id):
@@ -190,7 +190,7 @@ def delete_transportation_order(id):
         flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("planner.transportation_orders"))
 
-@planner_bp.route("/orders/archived", methods=["GET"])
+@planner_bp.route("/transportation_orders/archived", methods=["GET"])
 @login_required
 @role_required("planner")
 def archived_transportation_orders():
