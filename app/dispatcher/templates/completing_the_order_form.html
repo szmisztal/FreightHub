@@ -1,19 +1,25 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %} Completing the Order {% endblock %}
 
-{% block header %}{{ title }} Form{% endblock %}
+{% block header %} Completing the Order Form{% endblock %}
 
 {% block content %}
-<div class="assign_driver-form">
-    <form method="post">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.driver.label }} {{ form.driver }}<br>
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-    </form>
+<div class="completing_the_order-form">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.driver.label }} {{ form.driver() }}
+            </div>
+            <div>
+                {{ form.tractor_head.label }} {{ form.tractor_head() }}
+            </div>
+            <div>
+                {{ form.trailer.label }} {{ form.trailer() }}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
 </div>
 {% endblock %}

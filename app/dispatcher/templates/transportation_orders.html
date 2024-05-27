@@ -1,26 +1,21 @@
 {% extends 'base.html' %}
 
-{% block title %} {{ title }} {% endblock %}
+{% block title %} Orders List {% endblock %}
 
-{% block header %} {{ title }} {% endblock %}
+{% block header %} Orders List {% endblock %}
 
 {% block content %}
-<body>
-    <h1> {{ title }} </h1>
+    <h1> Orders List </h1>
     <ul>
         {% for order in orders %}
             <li>
-                {% if order.assigned_driver %}
-                    <a href="{{ url_for('dispatcher.change_assigned_driver', order_id=order.id) }}">
-                        {{ order.assigned_driver }} : {{ order.planned_delivery_date }}, {{ order.trailer_type }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
-                    </a>
-                {% else %}
-                    <a href="{{ url_for('dispatcher.assign_driver', order_id=order.id) }}">
-                        {{ order.planned_delivery_date }}, {{ order.trailer_type }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
-                    </a>
-                {% endif %}
+                <a href="{{ url_for('dispatcher.complete_the_order', id=order.id) }}">
+                    {{ order.planned_delivery_date }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
+                </a>
+                <p>Actually assigned driver: {{ order.assigned_driver.first_name }} {{ order.assigned_driver.last_name }}</p>
+                <p>Actually assigned tractor head: {{ order.assigned_tractor_head.brand }} {{ order.assigned_tractor_head.registration_number }}</p>
+                <p>Actually assigned trailer: {{ order.assigned_trailer.type }} {{ order.assigned_trailer.registration_number }}</p>
             </li>
         {% endfor %}
     </ul>
-</body>
 {% endblock %}

@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}Tracktor Heads List{% endblock %}
+{% block title %}Traktor Heads List{% endblock %}
 
-{% block header %}Tracktor Heads List{% endblock %}
+{% block header %}Tractor Heads List{% endblock %}
 
 {% block content %}
 <body>
-    <h1>Tracktor Heads List</h1>
+    <h1>Tractor Heads List</h1>
     <ul>
-        {% for tracktor_head in tracktor_heads %}
+        {% for tractor_head in tractor_heads %}
             <li>
-                <a href="{{ url_for('dispatcher.tracktor_head_details', id=tracktor_head.id) }}">
-                    {{ tracktor_head }}
+                <a href="{{ url_for('dispatcher.tractor_head_details', id=tractor_head.id) }}">
+                    {{ tractor_head }}
                 </a>
             </li>
         {% endfor %}
