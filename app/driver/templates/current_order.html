@@ -9,8 +9,8 @@
     <h1>Your Transportation Order:</h1>
     {% if order %}
         <p>Planned delivery date: {{ order.planned_delivery_date }}</p>
-        <p>Tractor Head: {{ order.tractor_head }}</p>
-        <p>Trailer: {{ order.trailer }}</p>
+        <p>Tractor Head: {{ order.assigned_tractor_head }}</p>
+        <p>Trailer: {{ order.assigned_trailer }}</p>
         <p>Load Weight: {{ order.load_weight }}</p>
         <p>Loading Place: {{ order.loading_company }}</p>
         <p>Delivery Place: {{ order.delivery_company }}</p>
