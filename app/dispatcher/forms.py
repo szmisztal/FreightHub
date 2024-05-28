@@ -43,8 +43,8 @@ class CompletingTheTransportationOrderForm(FlaskForm):
 
         tractor_head_choices = [(0, "No Tractor Head")]
         if assigned_tractor_head:
-            tractor_head_choices.append((assigned_tractor_head.id, f"{assigned_tractor_head.registration_number}"))
-        tractor_head_choices += [(t.id, f"{t.registration_number}") for t in self.get_available_tractor_heads()]
+            tractor_head_choices.append((assigned_tractor_head.id, f"{assigned_tractor_head.brand} {assigned_tractor_head.registration_number}"))
+        tractor_head_choices += [(t.id, f"{t.brand} {t.registration_number}") for t in self.get_available_tractor_heads()]
         self.tractor_head.choices = tractor_head_choices
 
         trailer_choices = [(0, "No Trailer")]
@@ -54,26 +54,31 @@ class CompletingTheTransportationOrderForm(FlaskForm):
         self.trailer.choices = trailer_choices
 
     def get_available_drivers(self):
-        active_driver_ids = db.session.query(TransportationOrder.driver).filter(
+        all_drivers = User.query.filter(User.role == "driver").all()
+        busy_driver_ids = db.session.query(TransportationOrder.driver).filter(
             TransportationOrder.completed == False,
             TransportationOrder.driver.isnot(None)
-        ).distinct().subquery()
-        available_drivers = User.query.filter(User.role == "driver", User.id.notin_(active_driver_ids)).all()
+        ).all()
+        busy_driver_ids = [driver_id for (driver_id,) in busy_driver_ids]
+        available_drivers = [driver for driver in all_drivers if driver.id not in busy_driver_ids]
         return available_drivers
 
     def get_available_tractor_heads(self):
-        active_tractor_heads_ids = db.session.query(TransportationOrder.tractor_head).filter(
+        all_tractor_heads = TractorHead.query.all()
+        busy_tractor_head_ids = db.session.query(TransportationOrder.tractor_head).filter(
             TransportationOrder.completed == False,
             TransportationOrder.tractor_head.isnot(None)
-        ).distinct().subquery()
-        available_tractor_heads = TractorHead.query.filter(TractorHead.id.notin_(active_tractor_heads_ids)).all()
+        ).all()
+        busy_tractor_head_ids = [tractor_head_id for (tractor_head_id,) in busy_tractor_head_ids]
+        available_tractor_heads = [tractor_head for tractor_head in all_tractor_heads if tractor_head.id not in busy_tractor_head_ids]
         return available_tractor_heads
 
     def get_available_trailer(self, trailer_type):
-        active_trailers_ids = db.session.query(TransportationOrder.trailer).filter(
+        busy_trailer_ids = db.session.query(TransportationOrder.trailer).filter(
             TransportationOrder.completed == False,
             TransportationOrder.trailer.isnot(None)
-        ).distinct().subquery()
-        available_trailer = Trailer.query.filter(Trailer.type == trailer_type, Trailer.id.notin_(active_trailers_ids)).all()
-        return available_trailer
+        ).all()
+        busy_trailers = [trailer_id for (trailer_id,) in busy_trailer_ids]
+        available_trailers = Trailer.query.filter(Trailer.type == trailer_type, Trailer.id.notin_(busy_trailers)).all()
+        return available_trailers
 
