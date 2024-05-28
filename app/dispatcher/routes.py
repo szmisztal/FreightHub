@@ -198,6 +198,6 @@ def complete_the_order(id):
             db.session.rollback()
             current_app.logger.exception(f"Error during completing the order: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("dispatcher.active_transport_orders", id=id))
+        return redirect(url_for("dispatcher.active_transport_orders"))
     return render_template("completing_the_order_form.html", form=form)
 
