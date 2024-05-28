@@ -57,4 +57,4 @@ class Trailer(db.Model):
     registration_number = db.Column(db.String(16), unique=True, nullable=False)
 
     def __repr__(self):
-        return f"{self.type.upper()} {self.registration_number.upper()}"
+        return f"{self.type} {self.registration_number.upper()}"
