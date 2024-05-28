@@ -6,5 +6,5 @@ class TractorHead(db.Model):
     registration_number = db.Column(db.String(16), unique=True, nullable=False)
 
     def __repr__(self):
-        return f"{self.brand.upper()} {self.registration_number.upper()}"
+        return f"{self.brand} {self.registration_number.upper()}"
 
