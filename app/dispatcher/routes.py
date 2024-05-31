@@ -1,36 +1,46 @@
 from flask import render_template, redirect, url_for, flash, current_app
 from flask_login import login_required
 from flask_wtf.csrf import generate_csrf
+from sqlalchemy.exc import IntegrityError
+from marshmallow import ValidationError
 from app import db
 from app.common.permissions import role_required
 from app.common.models import TransportationOrder, Trailer
 from . import dispatcher_bp
 from .forms import CompletingTheTransportationOrderForm, TractorHeadForm, TrailerForm
 from .models import TractorHead
+from .schemas import TractorHeadSchema, TrailerSchema
 
 @dispatcher_bp.route("/tractor_heads/new", methods=["GET", "POST"])
 @login_required
 @role_required("dispatcher")
 def new_tractor_head():
     form = TractorHeadForm()
+    schema = TractorHeadSchema()
     if form.validate_on_submit():
+        tractor_head_data = {
+            "brand": form.brand.data,
+            "registration_number": form.registration_number.data.upper()
+        }
         try:
-            tractor_head = create_tractor_head(form)
+            result = schema.load(tractor_head_data)
+            tractor_head = TractorHead(**result)
             db.session.add(tractor_head)
             db.session.commit()
             flash("New tractor head has been added", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"New tractor head - validation error: {e}")
+            flash(f"Validation error: {e}", "danger")
+        except IntegrityError as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Adding new tractor head error: {e}")
+            flash("Trailer registration number is already in use, choose another.", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during new tractor head adding: {e}")
             flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("home"))
     return render_template("tractor_head_form.html", form=form, title="New Tractor Head")
-
-def create_tractor_head(form):
-    return TractorHead(
-        brand=form.brand.data,
-        registration_number=form.registration_number.data
-    )
 
 @dispatcher_bp.route("/tractor_heads", methods=["GET"])
 @login_required
@@ -54,12 +64,25 @@ def tractor_head_details(id):
 def edit_tractor_head(id):
     tractor_head = TractorHead.query.get_or_404(id)
     form = TractorHeadForm(obj=tractor_head)
+    schema = TractorHeadSchema()
     if form.validate_on_submit():
+        tractor_head_data = {
+            "brand": form.brand.data,
+            "registration_number": form.registration_number.data
+        }
         try:
-            tractor_head.brand = form.brand.data
-            tractor_head.registration_number = form.registration_number.data
+            result = schema.load(tractor_head_data)
+            if tractor_head.registration_number != result["registration_number"]:
+                if TractorHead.query.filter_by(registration_number=result["registration_number"]).first():
+                    flash("Registration number is already in use", "danger")
+                    return render_template("trailer_form.html", form=form, title="Edit Tractor Head")
+            tractor_head.brand = result["brand"]
+            tractor_head.registration_number = result["registration_number"]
             db.session.commit()
             flash("Tractor head details updated successfully.", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"Edit tractor head - validation error: {e}")
+            flash(f"Validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during tractor head editing: {e}")
@@ -95,24 +118,31 @@ def delete_tractor_head(id):
 @role_required("dispatcher")
 def new_trailer():
     form = TrailerForm()
+    schema = TrailerSchema()
     if form.validate_on_submit():
+        trailer_data = {
+            "type": form.type.data,
+            "registration_number": form.registration_number.data.upper()
+        }
         try:
-            trailer = create_trailer(form)
+            result = schema.load(trailer_data)
+            trailer = Trailer(**result)
             db.session.add(trailer)
             db.session.commit()
             flash("New trailer has been added", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"New trailer - validation error: {e}")
+            flash(f"New trailer validation error: {e}", "danger")
+        except IntegrityError as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Adding new trailer error: {e}")
+            flash("Trailer registration number is already in use, choose another.", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during new trailer adding: {e}")
             flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("home"))
     return render_template("trailer_form.html", form=form, title="New Trailer")
-
-def create_trailer(form):
-    return Trailer(
-        type=form.type.data,
-        registration_number=form.registration_number.data
-    )
 
 @dispatcher_bp.route("/trailers", methods=["GET"])
 @login_required
@@ -136,12 +166,25 @@ def trailer_details(id):
 def edit_trailer(id):
     trailer = Trailer.query.get_or_404(id)
     form = TrailerForm(obj=trailer)
+    schema = TrailerSchema()
     if form.validate_on_submit():
+        trailer_data = {
+            "type": form.type.data,
+            "registration_number": form.registration_number.data
+        }
         try:
-            trailer.type = form.type.data
-            trailer.registration_number = form.registration_number.data
+            result = schema.load(trailer_data)
+            if trailer.registration_number != trailer_data["registration_number"]:
+                if Trailer.query.filter_by(registration_number=result["registration_number"]).first():
+                    flash("Registration number is already in use", "danger")
+                    return render_template("trailer_form.html", form=form, title="Edit Trailer")
+            trailer.type = result["type"]
+            trailer.registration_number = result["registration_number"].upper()
             db.session.commit()
             flash("Trailer details updated successfully.", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"Edit trailer - validation error: {e}")
+            flash(f"Edit trailer validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during trailer editing: {e}")
