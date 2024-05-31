@@ -1,41 +1,46 @@
 from flask import render_template, redirect, url_for, flash, current_app
 from flask_wtf.csrf import generate_csrf
 from flask_login import login_required, current_user
+from marshmallow import ValidationError
 from app import db
 from app.common.permissions import role_required
 from app.common.models import TransportationOrder
 from . import planner_bp
 from .models import Company
 from .forms import CompanyForm, TransportationOrderForm
+from .schemas import CompanySchema
 
 @planner_bp.route("/companies/new", methods=["GET", "POST"])
 @login_required
 @role_required("planner")
 def new_company():
     form = CompanyForm()
+    schema = CompanySchema()
     if form.validate_on_submit():
+        company_data = {
+            "company_name": form.company_name.data,
+            "country": form.country.data,
+            "town": form.town.data,
+            "postal_code": form.postal_code.data,
+            "street": form.street.data,
+            "street_number": form.street_number.data,
+            "phone_number": form.phone_number.data
+        }
         try:
-            company = create_company(form)
+            result = schema.load(company_data)
+            company = Company(**result)
             db.session.add(company)
             db.session.commit()
             flash("New company has been added.", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"New company - validation error: {e}")
+            flash(f"Validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during new company adding: {e}")
             flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("home"))
     return render_template("company_form.html", form=form, title="New Company")
-
-def create_company(form):
-    return Company(
-        company_name=form.company_name.data,
-        country=form.country.data,
-        town=form.town.data,
-        postal_code=form.postal_code.data,
-        street=form.street.data,
-        street_number=form.street_number.data,
-        phone_number=form.phone_number.data
-    )
 
 @planner_bp.route("/companies", methods=["GET"])
 @login_required
@@ -60,17 +65,31 @@ def company_details(id):
 def edit_company(id):
     company = Company.query.get_or_404(id)
     form = CompanyForm(obj=company)
+    schema = CompanySchema()
     if form.validate_on_submit():
+        company_data = {
+            "company_name": form.company_name.data,
+            "country": form.country.data,
+            "town": form.town.data,
+            "postal_code": form.postal_code.data,
+            "street": form.street.data,
+            "street_number": form.street_number.data,
+            "phone_number": form.phone_number.data
+        }
         try:
-            company.company_name = form.company_name.data
-            company.country = form.country.data
-            company.town = form.town.data
-            company.postal_code = form.postal_code.data
-            company.street = form.street.data
-            company.street_number = form.street_number.data
-            company.phone_number = form.phone_number.data
+            result = schema.load(company_data)
+            company.company_name = result["company_name"]
+            company.country = result["country"]
+            company.town = result["town"]
+            company.postal_code = result["postal_code"]
+            company.street = result["street"]
+            company.street_number = result["street_number"]
+            company.phone_number = result["phone_number"]
             db.session.commit()
             flash("Company details updated successfully.", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"Edit company - validation error: {e}")
+            flash(f"Validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during company editing: {e}")
