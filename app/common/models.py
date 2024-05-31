@@ -54,7 +54,7 @@ class TransportationOrder(db.Model):
 class Trailer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(16), nullable=False)
-    registration_number = db.Column(db.String(16), unique=True, nullable=False)
+    registration_number = db.Column(db.String(7), unique=True, nullable=False)
 
     def __repr__(self):
-        return f"{self.type} {self.registration_number.upper()}"
+        return f"{self.type} {self.registration_number}"
