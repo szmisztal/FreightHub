@@ -5,7 +5,7 @@ class Company(db.Model):
     company_name = db.Column(db.String(32), nullable=False)
     country = db.Column(db.String(32), nullable=False)
     town = db.Column(db.String(32), nullable=False)
-    postal_code = db.Column(db.String(16), nullable=False)
+    postal_code = db.Column(db.String(8), nullable=False)
     street = db.Column(db.String(32), nullable=False)
     street_number = db.Column(db.Integer, nullable=False)
     phone_number = db.Column(db.String(32), nullable=False)
