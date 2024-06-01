@@ -1,4 +1,4 @@
-import datetime as dt
+from datetime import date
 from flask_login import UserMixin
 from app import db
 
@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
 
 class TransportationOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    creation_date = db.Column(db.DateTime, default=dt.datetime.utcnow, nullable=False)
+    creation_date = db.Column(db.Date, default=date.today(), nullable=False)
     created_by = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     planned_delivery_date = db.Column(db.Date, nullable=False)
     trailer_type = db.Column(db.String(16), nullable=False)
