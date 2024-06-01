@@ -2,13 +2,14 @@ from flask import render_template, redirect, url_for, flash, current_app
 from flask_wtf.csrf import generate_csrf
 from flask_login import login_required, current_user
 from marshmallow import ValidationError
+from datetime import date
 from app import db
 from app.common.permissions import role_required
 from app.common.models import TransportationOrder
 from . import planner_bp
 from .models import Company
 from .forms import CompanyForm, TransportationOrderForm
-from .schemas import CompanySchema
+from .schemas import CompanySchema, PlannerTransportationOrderSchema
 
 @planner_bp.route("/companies/new", methods=["GET", "POST"])
 @login_required
@@ -125,28 +126,32 @@ def delete_company(id):
 @role_required("planner")
 def new_transportation_order():
     form = TransportationOrderForm()
+    schema = PlannerTransportationOrderSchema()
     if form.validate_on_submit():
+        transportation_order_data = {
+            "creation_date": str(date.today()),
+            "created_by": current_user.id,
+            "planned_delivery_date": str(form.planned_delivery_date.data),
+            "trailer_type": form.trailer_type.data,
+            "load_weight": form.load_weight.data,
+            "loading_place": form.loading_place.data,
+            "delivery_place": form.delivery_place.data
+        }
         try:
-            order = create_order(form)
+            result = schema.load(transportation_order_data)
+            order = TransportationOrder(**result)
             db.session.add(order)
             db.session.commit()
             flash("New transportation order has been created.", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"New transportation order (planner) - validation error: {e}")
+            flash(f"Validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during new transportation order adding: {e}")
             flash(f"Error: {e}, try again", "danger")
         return redirect(url_for("home"))
     return render_template("transportation_order_form.html", form=form, title="New Transportation Order")
-
-def create_order(form):
-    return TransportationOrder(
-        created_by=current_user.id,
-        planned_delivery_date=form.planned_delivery_date.data,
-        trailer_type=form.trailer_type.data,
-        load_weight=form.load_weight.data,
-        loading_place=form.loading_place.data,
-        delivery_place=form.delivery_place.data
-    )
 
 @planner_bp.route("/transportation_orders", methods=["GET"])
 @login_required
@@ -170,15 +175,29 @@ def transportation_order_details(id):
 def edit_transportation_order(id):
     order = TransportationOrder.query.get_or_404(id)
     form = TransportationOrderForm(obj=order)
+    schema = PlannerTransportationOrderSchema()
     if form.validate_on_submit():
+        transportation_order_data = {
+            "creation_date": str(order.creation_date),
+            "created_by": current_user.id,
+            "planned_delivery_date": str(form.planned_delivery_date.data),
+            "trailer_type": form.trailer_type.data,
+            "load_weight": form.load_weight.data,
+            "loading_place": form.loading_place.data,
+            "delivery_place": form.delivery_place.data
+        }
         try:
-            order.planned_delivery_date = form.planned_delivery_date.data
-            order.trailer_type = form.trailer_type.data
-            order.load_weight = form.load_weight.data
-            order.loading_place = form.loading_place.data
-            order.deliver_place = form.delivery_place.data
+            result = schema.load(transportation_order_data)
+            order.planned_delivery_date = result["planned_delivery_date"]
+            order.trailer_type = result["trailer_type"]
+            order.load_weight = result["load_weight"]
+            order.loading_place = result["loading_place"]
+            order.delivery_place = result["delivery_place"]
             db.session.commit()
             flash("Transportation order details updated successfully.", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"Edit transportation order (planner) - validation error: {e}")
+            flash(f"Validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during transportation order editing: {e}")
