@@ -23,8 +23,8 @@ class TransportationOrderForm(FlaskForm):
     planned_delivery_date = DateField("Planned delivery date", validators=[DataRequired(), validate_future_date])
     trailer_type = SelectField("Trailer type", choices=[], validators=[DataRequired()])
     load_weight = IntegerField("Load weight", validators=[DataRequired(), NumberRange(min=1,
-                                                                                       max=24000,
-                                                                                       message="Weight must be in range 1-24000")])
+                                                                                      max=24000,
+                                                                                      message="Weight must be in range 1-24000")])
     loading_place = SelectField("Loading place", choices=[], validators=[DataRequired()])
     delivery_place = SelectField("Delivery place", choices=[], validators=[DataRequired()])
     submit = SubmitField("Submit")
