@@ -9,7 +9,7 @@ from app.common.models import TransportationOrder, Trailer
 from . import dispatcher_bp
 from .forms import CompletingTheTransportationOrderForm, TractorHeadForm, TrailerForm
 from .models import TractorHead
-from .schemas import TractorHeadSchema, TrailerSchema
+from .schemas import TractorHeadSchema, TrailerSchema, DispatcherTransportationOrderSchema
 
 @dispatcher_bp.route("/tractor_heads/new", methods=["GET", "POST"])
 @login_required
@@ -75,7 +75,7 @@ def edit_tractor_head(id):
             if tractor_head.registration_number != result["registration_number"]:
                 if TractorHead.query.filter_by(registration_number=result["registration_number"]).first():
                     flash("Registration number is already in use", "danger")
-                    return render_template("trailer_form.html", form=form, title="Edit Tractor Head")
+                    return render_template("tractor_head_form.html", form=form, title="Edit Tractor Head")
             tractor_head.brand = result["brand"]
             tractor_head.registration_number = result["registration_number"]
             db.session.commit()
@@ -230,13 +230,23 @@ def active_transport_orders():
 def complete_the_order(id):
     order = TransportationOrder.query.get_or_404(id)
     form = CompletingTheTransportationOrderForm(obj=order)
+    schema = DispatcherTransportationOrderSchema()
     if form.validate_on_submit():
+        transportation_order_data = {
+            "driver": form.driver.data,
+            "tractor_head": form.tractor_head.data,
+            "trailer": form.trailer.data
+        }
         try:
-            order.driver = form.driver.data if form.driver.data != "0" else None
-            order.tractor_head = form.tractor_head.data if form.tractor_head.data != "0" else None
-            order.trailer = form.trailer.data if form.trailer.data != "0" else None
+            result = schema.load(transportation_order_data)
+            order.driver = result["driver"] if form.driver.data != "0" else None
+            order.tractor_head = result["tractor_head"] if form.tractor_head.data != "0" else None
+            order.trailer = result["trailer"] if form.trailer.data != "0" else None
             db.session.commit()
             flash("Successfully completed the order", "success")
+        except ValidationError as e:
+            current_app.logger.exception(f"Edit transportation order (dispatcher) - validation error: {e}")
+            flash(f"Validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during completing the order: {e}")
