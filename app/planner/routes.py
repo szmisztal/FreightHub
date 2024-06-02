@@ -6,10 +6,11 @@ from datetime import date
 from app import db
 from app.common.permissions import role_required
 from app.common.models import TransportationOrder
+from app.common.schemas import TransportationOrderSchema
 from . import planner_bp
 from .models import Company
 from .forms import CompanyForm, TransportationOrderForm
-from .schemas import CompanySchema, PlannerTransportationOrderSchema
+from .schemas import CompanySchema
 
 @planner_bp.route("/companies/new", methods=["GET", "POST"])
 @login_required
@@ -33,6 +34,7 @@ def new_company():
             db.session.add(company)
             db.session.commit()
             flash("New company has been added.", "success")
+            return redirect(url_for("home"))
         except ValidationError as e:
             current_app.logger.exception(f"New company - validation error: {e}")
             flash(f"Validation error: {e}", "danger")
@@ -40,7 +42,6 @@ def new_company():
             db.session.rollback()
             current_app.logger.exception(f"Error during new company adding: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("home"))
     return render_template("company_form.html", form=form, title="New Company")
 
 @planner_bp.route("/companies", methods=["GET"])
@@ -88,6 +89,7 @@ def edit_company(id):
             company.phone_number = result["phone_number"]
             db.session.commit()
             flash("Company details updated successfully.", "success")
+            return redirect(url_for("planner.companies"))
         except ValidationError as e:
             current_app.logger.exception(f"Edit company - validation error: {e}")
             flash(f"Validation error: {e}", "danger")
@@ -95,7 +97,6 @@ def edit_company(id):
             db.session.rollback()
             current_app.logger.exception(f"Error during company editing: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("planner.companies"))
     return render_template("company_form.html", form=form, title="Edit Company")
 
 @planner_bp.route("/companies/confirm-delete/<int:id>", methods=["GET"])
@@ -126,7 +127,7 @@ def delete_company(id):
 @role_required("planner")
 def new_transportation_order():
     form = TransportationOrderForm()
-    schema = PlannerTransportationOrderSchema()
+    schema = TransportationOrderSchema()
     if form.validate_on_submit():
         transportation_order_data = {
             "creation_date": str(date.today()),
@@ -143,6 +144,7 @@ def new_transportation_order():
             db.session.add(order)
             db.session.commit()
             flash("New transportation order has been created.", "success")
+            return redirect(url_for("home"))
         except ValidationError as e:
             current_app.logger.exception(f"New transportation order (planner) - validation error: {e}")
             flash(f"Validation error: {e}", "danger")
@@ -150,7 +152,6 @@ def new_transportation_order():
             db.session.rollback()
             current_app.logger.exception(f"Error during new transportation order adding: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("home"))
     return render_template("transportation_order_form.html", form=form, title="New Transportation Order")
 
 @planner_bp.route("/transportation_orders", methods=["GET"])
@@ -175,7 +176,7 @@ def transportation_order_details(id):
 def edit_transportation_order(id):
     order = TransportationOrder.query.get_or_404(id)
     form = TransportationOrderForm(obj=order)
-    schema = PlannerTransportationOrderSchema()
+    schema = TransportationOrderSchema()
     if form.validate_on_submit():
         transportation_order_data = {
             "creation_date": str(order.creation_date),
@@ -195,6 +196,7 @@ def edit_transportation_order(id):
             order.delivery_place = result["delivery_place"]
             db.session.commit()
             flash("Transportation order details updated successfully.", "success")
+            return redirect(url_for("planner.transportation_orders"))
         except ValidationError as e:
             current_app.logger.exception(f"Edit transportation order (planner) - validation error: {e}")
             flash(f"Validation error: {e}", "danger")
@@ -202,7 +204,6 @@ def edit_transportation_order(id):
             db.session.rollback()
             current_app.logger.exception(f"Error during transportation order editing: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("planner.transportation_orders"))
     return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
 
 @planner_bp.route("/transportation_orders/confirm-delete/<int:id>", methods=["GET"])
