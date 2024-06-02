@@ -33,6 +33,5 @@ class TransportationOrderForm(FlaskForm):
         super(TransportationOrderForm, self).__init__(*args, **kwargs)
         self.loading_place.choices = [(c.id, c.company_name) for c in Company.query.all()]
         self.delivery_place.choices = [(c.id, c.company_name) for c in Company.query.all()]
-        self.trailer_type.choices = [(t.type, t.type) for t in Trailer.query.with_entities(Trailer.type).distinct()]
-
-
+        # self.trailer_type.choices = [(t.type, t.type) for t in Trailer.query.with_entities(Trailer.type).distinct()]
+        self.trailer_type.choices = list(set([t.type for t in Trailer.query.all()]))
