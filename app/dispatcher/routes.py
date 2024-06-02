@@ -6,10 +6,11 @@ from marshmallow import ValidationError
 from app import db
 from app.common.permissions import role_required
 from app.common.models import TransportationOrder, Trailer
+from app.common.schemas import TransportationOrderSchema
 from . import dispatcher_bp
 from .forms import CompletingTheTransportationOrderForm, TractorHeadForm, TrailerForm
 from .models import TractorHead
-from .schemas import TractorHeadSchema, TrailerSchema, DispatcherTransportationOrderSchema
+from .schemas import TractorHeadSchema, TrailerSchema
 
 @dispatcher_bp.route("/tractor_heads/new", methods=["GET", "POST"])
 @login_required
@@ -28,6 +29,7 @@ def new_tractor_head():
             db.session.add(tractor_head)
             db.session.commit()
             flash("New tractor head has been added", "success")
+            return redirect(url_for("home"))
         except ValidationError as e:
             current_app.logger.exception(f"New tractor head - validation error: {e}")
             flash(f"Validation error: {e}", "danger")
@@ -39,7 +41,6 @@ def new_tractor_head():
             db.session.rollback()
             current_app.logger.exception(f"Error during new tractor head adding: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("home"))
     return render_template("tractor_head_form.html", form=form, title="New Tractor Head")
 
 @dispatcher_bp.route("/tractor_heads", methods=["GET"])
@@ -80,6 +81,7 @@ def edit_tractor_head(id):
             tractor_head.registration_number = result["registration_number"]
             db.session.commit()
             flash("Tractor head details updated successfully.", "success")
+            return redirect(url_for("dispatcher.tractor_heads"))
         except ValidationError as e:
             current_app.logger.exception(f"Edit tractor head - validation error: {e}")
             flash(f"Validation error: {e}", "danger")
@@ -87,7 +89,6 @@ def edit_tractor_head(id):
             db.session.rollback()
             current_app.logger.exception(f"Error during tractor head editing: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("dispatcher.tractor_heads"))
     return render_template("tractor_head_form.html", form=form, title="Edit Tractor Head")
 
 @dispatcher_bp.route("/tractor_heads/confirm-delete/<int:id>", methods=["GET"])
@@ -130,6 +131,7 @@ def new_trailer():
             db.session.add(trailer)
             db.session.commit()
             flash("New trailer has been added", "success")
+            return redirect(url_for("home"))
         except ValidationError as e:
             current_app.logger.exception(f"New trailer - validation error: {e}")
             flash(f"New trailer validation error: {e}", "danger")
@@ -141,7 +143,6 @@ def new_trailer():
             db.session.rollback()
             current_app.logger.exception(f"Error during new trailer adding: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("home"))
     return render_template("trailer_form.html", form=form, title="New Trailer")
 
 @dispatcher_bp.route("/trailers", methods=["GET"])
@@ -182,6 +183,7 @@ def edit_trailer(id):
             trailer.registration_number = result["registration_number"].upper()
             db.session.commit()
             flash("Trailer details updated successfully.", "success")
+            return redirect(url_for("dispatcher.trailers"))
         except ValidationError as e:
             current_app.logger.exception(f"Edit trailer - validation error: {e}")
             flash(f"Edit trailer validation error: {e}", "danger")
@@ -189,7 +191,6 @@ def edit_trailer(id):
             db.session.rollback()
             current_app.logger.exception(f"Error during trailer editing: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("dispatcher.trailers"))
     return render_template("trailer_form.html", form=form, title="Edit Trailer")
 
 @dispatcher_bp.route("/trailers/confirm-delete/<int:id>", methods=["GET"])
@@ -230,12 +231,20 @@ def active_transport_orders():
 def complete_the_order(id):
     order = TransportationOrder.query.get_or_404(id)
     form = CompletingTheTransportationOrderForm(obj=order)
-    schema = DispatcherTransportationOrderSchema()
+    schema = TransportationOrderSchema()
     if form.validate_on_submit():
         transportation_order_data = {
-            "driver": form.driver.data,
+            "creation_date": str(order.creation_date),
+            "created_by": order.created_by,
+            "planned_delivery_date": str(order.planned_delivery_date),
+            "trailer_type": order.trailer_type,
             "tractor_head": form.tractor_head.data,
-            "trailer": form.trailer.data
+            "trailer": form.trailer.data,
+            "load_weight": order.load_weight,
+            "loading_place": order.loading_place,
+            "delivery_place": order.delivery_place,
+            "driver": form.driver.data,
+            "completed": order.completed
         }
         try:
             result = schema.load(transportation_order_data)
@@ -244,6 +253,7 @@ def complete_the_order(id):
             order.trailer = result["trailer"] if form.trailer.data != "0" else None
             db.session.commit()
             flash("Successfully completed the order", "success")
+            return redirect(url_for("dispatcher.active_transport_orders"))
         except ValidationError as e:
             current_app.logger.exception(f"Edit transportation order (dispatcher) - validation error: {e}")
             flash(f"Validation error: {e}", "danger")
@@ -251,6 +261,5 @@ def complete_the_order(id):
             db.session.rollback()
             current_app.logger.exception(f"Error during completing the order: {e}")
             flash(f"Error: {e}, try again", "danger")
-        return redirect(url_for("dispatcher.active_transport_orders"))
     return render_template("completing_the_order_form.html", form=form)
 
