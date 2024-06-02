@@ -1,7 +1,6 @@
-from datetime import date
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, SelectField, DateField
-from wtforms.validators import Length, DataRequired, NumberRange, ValidationError
+from wtforms.validators import Length, DataRequired, NumberRange
 from app.common.models import Trailer
 from .models import Company
 
@@ -15,12 +14,8 @@ class CompanyForm(FlaskForm):
     phone_number = StringField("Phone number", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
-def validate_future_date(form, field):
-    if field.data < date.today():
-        raise ValidationError("The date must be in the future.")
-
 class TransportationOrderForm(FlaskForm):
-    planned_delivery_date = DateField("Planned delivery date", validators=[DataRequired(), validate_future_date])
+    planned_delivery_date = DateField("Planned delivery date", validators=[DataRequired()])
     trailer_type = SelectField("Trailer type", choices=[], validators=[DataRequired()])
     load_weight = IntegerField("Load weight", validators=[DataRequired(), NumberRange(min=1,
                                                                                       max=24000,

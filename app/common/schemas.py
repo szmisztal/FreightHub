@@ -1,4 +1,5 @@
-from marshmallow import Schema, fields, validate
+from marshmallow import Schema, fields, validate, validates, ValidationError
+from datetime import date
 
 class TransportationOrderSchema(Schema):
     creation_date = fields.Date(required=True)
@@ -12,3 +13,8 @@ class TransportationOrderSchema(Schema):
     delivery_place = fields.Int(required=True)
     driver = fields.Int(allow_none=True)
     completed = fields.Bool(default=False)
+
+    @validates("planned_delivery_date")
+    def validate_planned_delivery_date(self, value):
+        if value < date.today():
+            raise ValidationError("The date must be in the future.")
