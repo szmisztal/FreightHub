@@ -38,19 +38,19 @@ class CompletingTheTransportationOrderForm(FlaskForm):
         driver_choices = [(0, "No Driver")]
         if assigned_driver:
             driver_choices.append((assigned_driver.id, f"{assigned_driver.first_name} {assigned_driver.last_name}"))
-        driver_choices += [(u.id, f"{u.first_name} {u.last_name}") for u in self.get_available_drivers()]
+        driver_choices += [(driver.id, f"{driver.first_name} {driver.last_name}") for driver in self.get_available_drivers()]
         self.driver.choices = driver_choices
 
         tractor_head_choices = [(0, "No Tractor Head")]
         if assigned_tractor_head:
             tractor_head_choices.append((assigned_tractor_head.id, f"{assigned_tractor_head.brand} {assigned_tractor_head.registration_number}"))
-        tractor_head_choices += [(t.id, f"{t.brand} {t.registration_number}") for t in self.get_available_tractor_heads()]
+        tractor_head_choices += [(tractor.id, f"{tractor.brand} {tractor.registration_number}") for tractor in self.get_available_tractor_heads()]
         self.tractor_head.choices = tractor_head_choices
 
         trailer_choices = [(0, "No Trailer")]
         if assigned_trailer:
             trailer_choices.append((assigned_trailer.id, f"{assigned_trailer.registration_number}"))
-        trailer_choices += [(tr.id, f"{tr.registration_number}") for tr in self.get_available_trailer(kwargs.get("obj").trailer_type)]
+        trailer_choices += [(trailer.id, f"{trailer.registration_number}") for trailer in self.get_available_trailer(kwargs.get("obj").trailer_type)]
         self.trailer.choices = trailer_choices
 
     def get_available_drivers(self):
