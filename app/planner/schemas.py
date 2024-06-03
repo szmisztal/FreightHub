@@ -1,13 +1,14 @@
 from marshmallow import Schema, fields, validate, validates, ValidationError
+from app.common.custom_utils import not_blank
 
 class CompanySchema(Schema):
-    company_name = fields.Str(required=True, validate=validate.Length(max=32))
-    country = fields.Str(required=True, validate=validate.Length(max=32))
-    town = fields.Str(required=True, validate=validate.Length(max=32))
-    postal_code = fields.Str(required=True, validate=validate.Length(max=8))
-    street = fields.Str(required=True, validate=validate.Length(max=32))
+    company_name = fields.Str(required=True, validate=[validate.Length(max=32), not_blank])
+    country = fields.Str(required=True, validate=[validate.Length(max=32), not_blank])
+    town = fields.Str(required=True, validate=[validate.Length(max=32), not_blank])
+    postal_code = fields.Str(required=True, validate=[validate.Length(max=8), not_blank])
+    street = fields.Str(required=True, validate=[validate.Length(max=32), not_blank])
     street_number = fields.Int(required=True)
-    phone_number = fields.Str(required=True, validate=validate.Length(min=8, max=32))
+    phone_number = fields.Str(required=True, validate=[validate.Length(min=8, max=32), not_blank])
 
     @validates("phone_number")
     def validate_phone_number(self, value):
