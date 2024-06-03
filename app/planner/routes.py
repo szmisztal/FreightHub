@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, current_app
+from flask import request, render_template, redirect, url_for, flash, current_app
 from flask_wtf.csrf import generate_csrf
 from flask_login import login_required, current_user
 from marshmallow import ValidationError
@@ -7,6 +7,7 @@ from app import db
 from app.common.permissions import role_required
 from app.common.models import TransportationOrder
 from app.common.schemas import TransportationOrderSchema
+from app.common.custom_utils import send_validation_errors_to_form
 from . import planner_bp
 from .models import Company
 from .forms import CompanyForm, TransportationOrderForm
@@ -18,7 +19,7 @@ from .schemas import CompanySchema
 def new_company():
     form = CompanyForm()
     schema = CompanySchema()
-    if form.validate_on_submit():
+    if request.method == "POST":
         company_data = {
             "company_name": form.company_name.data,
             "country": form.country.data,
@@ -36,8 +37,8 @@ def new_company():
             flash("New company has been added.", "success")
             return redirect(url_for("home"))
         except ValidationError as e:
+            send_validation_errors_to_form(e, form)
             current_app.logger.exception(f"New company - validation error: {e}")
-            flash(f"Validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during new company adding: {e}")
