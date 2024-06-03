@@ -10,24 +10,45 @@
         {{ form.hidden_tag() }}
         <div>
             {{ form.company_name.label }} {{ form.company_name(size=20) }}<br>
+            {% for error in form.company_name.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.country.label }} {{ form.country(size=20) }}<br>
+            {% for error in form.country.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.town.label }} {{ form.town(size=20) }}<br>
+            {% for error in form.town.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.postal_code.label }} {{ form.postal_code(size=20) }}<br>
+            {% for error in form.postal_code.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.street.label }} {{ form.street(size=20) }}<br>
+            {% for error in form.street.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.street_number.label }} {{ form.street_number(size=20) }}<br>
+            {% for error in form.street_number.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.phone_number.label }} {{ form.phone_number(size=20) }}<br>
+            {% for error in form.phone_number.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.submit() }}
