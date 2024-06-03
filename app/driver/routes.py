@@ -6,7 +6,7 @@ from app.common.permissions import role_required
 from app.common.models import TransportationOrder
 from . import driver_bp
 
-@driver_bp.route("/orders/current-order", methods=["GET"])
+@driver_bp.route("/current-order", methods=["GET"])
 @login_required
 @role_required("driver")
 def current_transportation_order():
@@ -16,7 +16,7 @@ def current_transportation_order():
         return redirect(url_for("home"))
     return render_template("current_order.html", order=order)
 
-@driver_bp.route("/orders/confirm-finish-order/<int:id>", methods=["GET"])
+@driver_bp.route("/confirm-finish-order/<int:id>", methods=["GET"])
 @login_required
 @role_required("driver")
 def confirm_finish_order(id):
@@ -24,7 +24,7 @@ def confirm_finish_order(id):
     csrf_token = generate_csrf()
     return render_template("confirm_finish_order.html", csrf_token=csrf_token, current_order=current_order)
 
-@driver_bp.route("/orders/finish/<int:id>", methods=["POST"])
+@driver_bp.route("/finish/<int:id>", methods=["POST"])
 @login_required
 @role_required("driver")
 def finish_order(id):
@@ -40,7 +40,7 @@ def finish_order(id):
         flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("home"))
 
-@driver_bp.route("/orders/archived", methods=["GET"])
+@driver_bp.route("/archived-orders", methods=["GET"])
 @login_required
 @role_required("driver")
 def completed_orders():
