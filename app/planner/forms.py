@@ -5,13 +5,13 @@ from app.common.models import Trailer
 from .models import Company
 
 class CompanyForm(FlaskForm):
-    company_name = StringField("Company name", validators=[DataRequired(), Length(max=32)])
-    country = StringField("Country", validators=[DataRequired()])
-    town = StringField("Town", validators=[DataRequired()])
-    postal_code = StringField("Postal code", validators=[DataRequired()])
-    street = StringField("Street", validators=[DataRequired()])
-    street_number = IntegerField("Street number", validators=[DataRequired()])
-    phone_number = StringField("Phone number", validators=[DataRequired()])
+    company_name = StringField("Company name")
+    country = StringField("Country")
+    town = StringField("Town")
+    postal_code = StringField("Postal code")
+    street = StringField("Street")
+    street_number = IntegerField("Street number")
+    phone_number = StringField("Phone number")
     submit = SubmitField("Submit")
 
 class TransportationOrderForm(FlaskForm):
