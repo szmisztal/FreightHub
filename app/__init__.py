@@ -1,29 +1,14 @@
-import os
-import logging
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
+from app.common.custom_utils import create_logger
 
 db = SQLAlchemy()
 migrate = None
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-
-def create_logger(app, log_folder, log_file_name):
-    if not os.path.exists(log_folder):
-        os.makedirs(log_folder)
-
-    log_path = os.path.join(log_folder, log_file_name)
-
-    handler = logging.FileHandler(log_path)
-    handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    handler.setFormatter(formatter)
-
-    app.logger.addHandler(handler)
-    app.logger.setLevel(logging.DEBUG)
 
 def create_app():
     app = Flask(__name__)
