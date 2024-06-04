@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from marshmallow import ValidationError
 from app import db, bcrypt
 from app.common.models import User
+from app.common.custom_utils import send_validation_errors_to_form
 from . import user_bp
 from .forms import RegistrationForm, LoginForm
 from .schemas import UserSchema
@@ -12,7 +13,7 @@ from .schemas import UserSchema
 def register():
     form = RegistrationForm()
     schema = UserSchema()
-    if form.validate_on_submit():
+    if request.method == "POST":
         user_data = {
             "username": form.username.data,
             "first_name": form.first_name.data,
@@ -30,8 +31,8 @@ def register():
             flash("Registration successfully, you can log in.", "success")
             return redirect(url_for("user.login"))
         except ValidationError as e:
+            send_validation_errors_to_form(e, form)
             current_app.logger.exception(f"Register - validation error: {e}")
-            flash(f"Validation error: {e}", "danger")
         except IntegrityError as e:
             db.session.rollback()
             current_app.logger.exception(f"Registration error: {e}")
@@ -63,7 +64,7 @@ def edit_user_data(id):
     user = User.query.get_or_404(id)
     form = RegistrationForm(obj=user)
     schema = UserSchema()
-    if form.validate_on_submit():
+    if request.method == "POST":
         user_data = {
             "username": form.username.data,
             "first_name": form.first_name.data,
@@ -75,14 +76,6 @@ def edit_user_data(id):
         }
         try:
             result = schema.load(user_data)
-            if user.username != result["username"]:
-                if User.query.filter_by(username=result["username"]).first():
-                    flash("Username is already in use, choose another.", "danger")
-                    return render_template("register.html", form=form, title="User Data Edit")
-            if user.email != result["email"]:
-                if User.query.filter_by(email=result["email"]).first():
-                    flash("Email is already in use, choose another.", "danger")
-                    return render_template("register.html", form=form, title="User Data Edit")
             user.username = result["username"]
             user.first_name = result["first_name"]
             user.last_name = result["last_name"]
@@ -96,8 +89,12 @@ def edit_user_data(id):
             flash("Your user data updated successfully.", "success")
             return redirect(url_for("home"))
         except ValidationError as e:
-            current_app.logger.exception(f"Edit user data - validation error: {e}")
-            flash(f"Validation error: {e}", "danger")
+            send_validation_errors_to_form(e, form)
+            current_app.logger.exception(f"Register validation error: {e}")
+        except IntegrityError as e:
+            db.session.rollback()
+            current_app.logger.exception(f"Edit user ({current_user}) error: {e}")
+            flash("Username or email is already in use, choose another.", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during user data editing: {e}")
