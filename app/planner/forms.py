@@ -15,13 +15,11 @@ class CompanyForm(FlaskForm):
     submit = SubmitField("Submit")
 
 class TransportationOrderForm(FlaskForm):
-    planned_delivery_date = DateField("Planned delivery date", validators=[DataRequired()])
-    trailer_type = SelectField("Trailer type", choices=[], validators=[DataRequired()])
-    load_weight = IntegerField("Load weight", validators=[DataRequired(), NumberRange(min=1,
-                                                                                      max=24000,
-                                                                                      message="Weight must be in range 1-24000")])
-    loading_place = SelectField("Loading place", choices=[], validators=[DataRequired()])
-    delivery_place = SelectField("Delivery place", choices=[], validators=[DataRequired()])
+    planned_delivery_date = DateField("Planned delivery date")
+    trailer_type = SelectField("Trailer type", choices=[])
+    load_weight = IntegerField("Load weight")
+    loading_place = SelectField("Loading place", choices=[])
+    delivery_place = SelectField("Delivery place", choices=[])
     submit = SubmitField("Submit")
 
     def __init__(self, *args, **kwargs):

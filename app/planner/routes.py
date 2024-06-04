@@ -54,7 +54,6 @@ def companies():
         flash("Companies list is empty.", "info")
     return render_template("companies_list.html", companies=all_companies)
 
-
 @planner_bp.route("/companies/<int:id>", methods=["GET"])
 @login_required
 @role_required("planner")
@@ -69,7 +68,7 @@ def edit_company(id):
     company = Company.query.get_or_404(id)
     form = CompanyForm(obj=company)
     schema = CompanySchema()
-    if form.validate_on_submit():
+    if request.method == "POST":
         company_data = {
             "company_name": form.company_name.data,
             "country": form.country.data,
@@ -92,11 +91,11 @@ def edit_company(id):
             flash("Company details updated successfully.", "success")
             return redirect(url_for("planner.companies"))
         except ValidationError as e:
-            current_app.logger.exception(f"Edit company - validation error: {e}")
-            flash(f"Validation error: {e}", "danger")
+            send_validation_errors_to_form(e, form)
+            current_app.logger.exception(f"Edit {company} - validation error: {e}")
         except Exception as e:
             db.session.rollback()
-            current_app.logger.exception(f"Error during company editing: {e}")
+            current_app.logger.exception(f"Error during {company} editing: {e}")
             flash(f"Error: {e}, try again", "danger")
     return render_template("company_form.html", form=form, title="Edit Company")
 
@@ -119,7 +118,7 @@ def delete_company(id):
         flash("Company has been deleted.", "success")
     except Exception as e:
         db.session.rollback()
-        current_app.logger.exception(f"Error during company deleting: {e}")
+        current_app.logger.exception(f"Error during {company} deleting: {e}")
         flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("planner.companies"))
 
@@ -129,7 +128,7 @@ def delete_company(id):
 def new_transportation_order():
     form = TransportationOrderForm()
     schema = TransportationOrderSchema()
-    if form.validate_on_submit():
+    if request.method == "POST":
         transportation_order_data = {
             "creation_date": str(date.today()),
             "created_by": current_user.id,
@@ -147,8 +146,8 @@ def new_transportation_order():
             flash("New transportation order has been created.", "success")
             return redirect(url_for("home"))
         except ValidationError as e:
+            send_validation_errors_to_form(e, form)
             current_app.logger.exception(f"New transportation order (planner) - validation error: {e}")
-            flash(f"Validation error: {e}", "danger")
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(f"Error during new transportation order adding: {e}")
@@ -178,7 +177,7 @@ def edit_transportation_order(id):
     order = TransportationOrder.query.get_or_404(id)
     form = TransportationOrderForm(obj=order)
     schema = TransportationOrderSchema()
-    if form.validate_on_submit():
+    if request.method == "POST":
         transportation_order_data = {
             "creation_date": str(order.creation_date),
             "created_by": current_user.id,
@@ -199,11 +198,11 @@ def edit_transportation_order(id):
             flash("Transportation order details updated successfully.", "success")
             return redirect(url_for("planner.transportation_orders"))
         except ValidationError as e:
-            current_app.logger.exception(f"Edit transportation order (planner) - validation error: {e}")
-            flash(f"Validation error: {e}", "danger")
+            send_validation_errors_to_form(e, form)
+            current_app.logger.exception(f"Edit {order} (planner) - validation error: {e}")
         except Exception as e:
             db.session.rollback()
-            current_app.logger.exception(f"Error during transportation order editing: {e}")
+            current_app.logger.exception(f"Error during {order} editing: {e}")
             flash(f"Error: {e}, try again", "danger")
     return render_template("transportation_order_form.html", form=form, title="Edit Transportation Order")
 
@@ -226,7 +225,7 @@ def delete_transportation_order(id):
         flash("Transportation order has been deleted.", "success")
     except Exception as e:
         db.session.rollback()
-        current_app.logger.exception(f"Error during transportation order deleting: {e}")
+        current_app.logger.exception(f"Error during {order} deleting: {e}")
         flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("planner.transportation_orders"))
 
