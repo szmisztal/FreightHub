@@ -35,7 +35,7 @@ def finish_order(id):
         flash("Transportation order has been completed.", "success")
     except Exception as e:
         db.session.rollback()
-        current_app.logger.exception(f"Error during transportation order finishing by driver "
+        current_app.logger.exception(f"Error during {current_order} finishing by driver "
                                      f"{current_user.first_name} {current_user.last_name}: {e}")
         flash(f"Error: {e}, try again", "danger")
     return redirect(url_for("home"))
