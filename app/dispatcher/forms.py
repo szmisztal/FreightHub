@@ -6,8 +6,8 @@ from app.common.models import User, TransportationOrder, Trailer
 from .models import TractorHead
 
 class TractorHeadForm(FlaskForm):
-    brand = StringField("Brand", validators=[DataRequired()])
-    registration_number = StringField("Registration Number", validators=[DataRequired()])
+    brand = StringField("Brand")
+    registration_number = StringField("Registration Number")
     submit = SubmitField("Submit")
 
 class TrailerForm(FlaskForm):
@@ -17,15 +17,14 @@ class TrailerForm(FlaskForm):
                                         ("Low loader","Low-loader trailer"),
                                         ("Container", "Container trailer"),
                                         ("Self-unloading", "Self-unloading trailer"),
-                                        ("Insulated", "Insulated trailer")],
-                               validators=[DataRequired()])
-    registration_number = StringField("Registration Number", validators=[DataRequired()])
+                                        ("Insulated", "Insulated trailer")])
+    registration_number = StringField("Registration Number")
     submit = SubmitField("Submit")
 
 class CompletingTheTransportationOrderForm(FlaskForm):
-    driver = SelectField("Driver", choices=[], validators=[DataRequired()])
-    tractor_head = SelectField("Tractor Head", choices=[], validators=[DataRequired()])
-    trailer = SelectField("Trailer", choices=[], validators=[DataRequired()])
+    driver = SelectField("Driver", choices=[])
+    tractor_head = SelectField("Tractor Head", choices=[])
+    trailer = SelectField("Trailer", choices=[])
     submit = SubmitField("Submit")
 
     def __init__(self, *args, **kwargs):
