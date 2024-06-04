@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm
 from wtforms import SelectField, SubmitField, StringField
-from wtforms.validators import DataRequired
 from app import db
 from app.common.models import User, TransportationOrder, Trailer
 from .models import TractorHead
