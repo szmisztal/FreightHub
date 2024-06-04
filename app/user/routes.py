@@ -90,14 +90,14 @@ def edit_user_data(id):
             return redirect(url_for("home"))
         except ValidationError as e:
             send_validation_errors_to_form(e, form)
-            current_app.logger.exception(f"Register validation error: {e}")
+            current_app.logger.exception(f"Edit {user} validation error: {e}")
         except IntegrityError as e:
             db.session.rollback()
-            current_app.logger.exception(f"Edit user ({current_user}) error: {e}")
+            current_app.logger.exception(f"Edit {user} error: {e}")
             flash("Username or email is already in use, choose another.", "danger")
         except Exception as e:
             db.session.rollback()
-            current_app.logger.exception(f"Error during user data editing: {e}")
+            current_app.logger.exception(f"Edit {user} error: {e}")
             flash(f"Error: {e}, try again", "danger")
     return render_template("register.html", form=form, title="User Data Edit")
 
