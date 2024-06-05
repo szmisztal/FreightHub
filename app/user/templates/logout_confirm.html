@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
 
+{% block title %}Logout Confirmation{% endblock %}
+
 {% block content %}
-<div class="logout-confirm">
+<div class="form-container">
     <h2>Are you sure you want to log out?</h2>
     <form action="{{ url_for('user.logout') }}" method="post">
-        <input type="submit" value="Logout" />
-        <a href="{{ url_for('home') }}">Cancel</a>
+        <input type="submit" value="Logout" class="btn btn-danger" />
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 {% endblock %}
+
+

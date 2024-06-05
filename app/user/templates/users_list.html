@@ -5,31 +5,33 @@
 {% block header %}Users List{% endblock %}
 
 {% block content %}
-<body>
+<div class="list-container users-list">
     <h1>Users List</h1>
     <h3>Planners:</h3>
-    <ul>
+    <ul class="user-group">
         {% for planner in planners %}
-            <li>
+            <li class="user-item">
                 <p>{{ planner }}</p>
             </li>
         {% endfor %}
     </ul>
     <h3>Dispatchers:</h3>
-    <ul>
+    <ul class="user-group">
         {% for dispatcher in dispatchers %}
-            <li>
+            <li class="user-item">
                 <p>{{ dispatcher }}</p>
             </li>
         {% endfor %}
     </ul>
     <h3>Drivers:</h3>
-    <ul>
+    <ul class="user-group">
         {% for driver in drivers %}
-            <li>
+            <li class="user-item">
                 <p>{{ driver }}</p>
             </li>
         {% endfor %}
     </ul>
-</body>
+</div>
 {% endblock %}
+
+

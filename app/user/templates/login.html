@@ -5,12 +5,26 @@
 {% block header %}Login Form{% endblock %}
 
 {% block content %}
-<div class="login-form">
+<div class="form-container">
     <form method="post" action="{{ url_for('user.login') }}">
         {{ form.hidden_tag() }}
-        <div>{{ form.email.label }} {{ form.email() }}</div>
-        <div>{{ form.password.label }} {{ form.password() }}</div>
-        <div>{{ form.submit() }}</div>
+        <div class="form-group">
+            <label for="email">{{ form.email.label }}</label>
+            {{ form.email(id="email", class="form-control") }}
+            {% for error in form.email.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="password">{{ form.password.label }}</label>
+            {{ form.password(id="password", class="form-control") }}
+            {% for error in form.password.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
     </form>
 </div>
 {% endblock %}
