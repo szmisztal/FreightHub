@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(16), nullable=False)
 
     def __repr__(self):
-        return f"{self.first_name} {self.last_name} - {self.phone_number} - {self.role}"
+        return f"{self.first_name} {self.last_name} - {self.email}, {self.phone_number}"
 
 class TransportationOrder(db.Model):
     id = db.Column(db.Integer, primary_key=True)
