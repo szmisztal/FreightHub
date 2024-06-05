@@ -16,15 +16,27 @@
         </div>
         <div>
             {{ form.trailer_type.label }} {{ form.trailer_type }}<br>
+            {% for error in form.trailer_type.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.load_weight.label }} {{ form.load_weight }}<br>
+            {% for error in form.load_weight.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.loading_place.label }} {{ form.loading_place }}<br>
+            {% for error in form.loading_place.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.delivery_place.label }} {{ form.delivery_place }}<br>
+            {% for error in form.delivery_place.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.submit() }}
