@@ -5,11 +5,13 @@
 {% block header %}Trailer Details{% endblock %}
 
 {% block content %}
-<body>
-    <p>Type: {{ trailer.type }}</p>
-    <p>Registration number: {{ trailer.registration_number }}</p>
-    <a href="{{ url_for('dispatcher.edit_trailer', id=trailer.id) }}">Edit</a><br>
-    <a href="{{ url_for('dispatcher.confirm_trailer_delete', id=trailer.id) }}">Delete</a><br>
-    <a href="{{ url_for('dispatcher.trailers') }}">Back to list</a><br>
-</body>
+<div class="form-container trailer-details">
+    <p><strong>Type:</strong> {{ trailer.type }}</p>
+    <p><strong>Registration number:</strong> {{ trailer.registration_number }}</p>
+    <a href="{{ url_for('dispatcher.edit_trailer', id=trailer.id) }}" class="btn btn-primary">Edit</a><br>
+    <a href="{{ url_for('dispatcher.confirm_trailer_delete', id=trailer.id) }}" class="btn btn-danger">Delete</a><br>
+    <a href="{{ url_for('dispatcher.trailers') }}" class="btn btn-secondary">Back to list</a><br>
+</div>
 {% endblock %}
+
+

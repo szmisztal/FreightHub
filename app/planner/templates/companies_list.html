@@ -5,7 +5,7 @@
 {% block header %}Companies List{% endblock %}
 
 {% block content %}
-<body>
+<div class="list-container companies-list">
     <h1>Companies List</h1>
     <ul>
         {% for company in companies %}
@@ -17,5 +17,7 @@
             </li>
         {% endfor %}
     </ul>
-</body>
+</div>
 {% endblock %}
+
+

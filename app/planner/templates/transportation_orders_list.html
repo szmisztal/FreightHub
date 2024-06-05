@@ -5,16 +5,17 @@
 {% block header %} {{ title }} {% endblock %}
 
 {% block content %}
-<body>
-    <h1> {{ title }} </h1>
+<div class="list-container transportation-orders-list">
+    <h1>{{ title }}</h1>
     <ul>
         {% for order in orders %}
             <li>
                 <a href="{{ url_for('planner.transportation_order_details', id=order.id) }}">
-                    {{ order.planned_delivery_date }}, {{ order.trailer_type }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
+                    {{ order.planned_delivery_date }}: {{ order.trailer_type }} {{ order.load_weight / 1000 }}t : {{ order.loading_company.company_name }} ---> {{ order.delivery_company.company_name }}
                 </a>
             </li>
         {% endfor %}
     </ul>
-</body>
+</div>
 {% endblock %}
+

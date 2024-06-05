@@ -5,24 +5,28 @@
 {% block header %}{{ title }} Form{% endblock %}
 
 {% block content %}
-<div class="trailer-form">
+<div class="form-container">
     <form method="post">
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.type.label }} {{ form.type }}<br>
+        <div class="form-group">
+            <label for="type">{{ form.type.label }}</label>
+            {{ form.type(id="type", class="form-control") }}
             {% for error in form.type.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.registration_number.label }} {{ form.registration_number(size=20) }}<br>
+        <div class="form-group">
+            <label for="registration_number">{{ form.registration_number.label }}</label>
+            {{ form.registration_number(id="registration_number", class="form-control", size=20) }}
             {% for error in form.registration_number.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.submit() }}
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
 </div>
 {% endblock %}
+
+

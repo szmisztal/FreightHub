@@ -5,23 +5,25 @@
 {% block header %}Transportation Order Details{% endblock %}
 
 {% block content %}
-<body>
+<div class="form-container transportation-order-details">
     <h1>Order Details:</h1>
-    <p>Order ID: {{ order.id }}</p>
-    <p>Creation Date: {{ order.creation_date }}</p>
-    <p>Created By: {{ order.creator }}</p>
-    <p>Planned Delivery Date: {{ order.planned_delivery_date }}</p>
-    <p>Trailer Type: {{ order.trailer_type }}</p>
-    <p>Load Weight: {{ order.load_weight }}</p>
-    <p>Loading Place: {{ order.loading_company }}</p>
-    <p>Delivery Place: {{ order.delivery_company }}</p>
+    <p><strong>Order ID:</strong> {{ order.id }}</p>
+    <p><strong>Creation Date:</strong> {{ order.creation_date }}</p>
+    <p><strong>Created By:</strong> {{ order.creator }}</p>
+    <p><strong>Planned Delivery Date:</strong> {{ order.planned_delivery_date }}</p>
+    <p><strong>Trailer Type:</strong> {{ order.trailer_type }}</p>
+    <p><strong>Load Weight:</strong> {{ order.load_weight }}</p>
+    <p><strong>Loading Place:</strong> {{ order.loading_company }}</p>
+    <p><strong>Delivery Place:</strong> {{ order.delivery_company }}</p>
     {% if not order.completed %}
-        <a href="{{ url_for('planner.edit_transportation_order', id=order.id) }}">Edit</a><br>
-        <a href="{{ url_for('planner.confirm_transportation_order_delete', id=order.id) }}">Delete</a><br>
-        <a href="{{ url_for('planner.transportation_orders') }}">Back to list</a><br>
+        <a href="{{ url_for('planner.edit_transportation_order', id=order.id) }}" class="btn btn-primary">Edit</a><br>
+        <a href="{{ url_for('planner.confirm_transportation_order_delete', id=order.id) }}" class="btn btn-danger">Delete</a><br>
+        <a href="{{ url_for('planner.transportation_orders') }}" class="btn btn-secondary">Back to list</a><br>
     {% else %}
-        <p>Completed by: {{ order.assigned_driver }}</p>
-        <a href="{{ url_for('planner.archived_transportation_orders') }}">Back to list</a><br>
+        <p><strong>Completed by:</strong> {{ order.assigned_driver }}</p>
+        <a href="{{ url_for('planner.archived_transportation_orders') }}" class="btn btn-secondary">Back to list</a><br>
     {% endif %}
-</body>
+</div>
 {% endblock %}
+
+

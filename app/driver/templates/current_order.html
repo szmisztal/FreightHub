@@ -5,18 +5,19 @@
 {% block header %}Current Order{% endblock %}
 
 {% block content %}
-<body>
+<div class="form-container current-order">
     <h1>Your Transportation Order:</h1>
     {% if order %}
-        <p>Planned delivery date: {{ order.planned_delivery_date }}</p>
-        <p>Tractor Head: {{ order.assigned_tractor_head }}</p>
-        <p>Trailer: {{ order.assigned_trailer }}</p>
-        <p>Load Weight: {{ order.load_weight }}</p>
-        <p>Loading Place: {{ order.loading_company }}</p>
-        <p>Delivery Place: {{ order.delivery_company }}</p>
-        <a href="{{ url_for('driver.confirm_finish_order', id=order.id) }}">Complete</a>
+        <p><strong>Planned delivery date:</strong> {{ order.planned_delivery_date }}</p>
+        <p><strong>Tractor Head:</strong> {{ order.assigned_tractor_head }}</p>
+        <p><strong>Trailer:</strong> {{ order.assigned_trailer }}</p>
+        <p><strong>Load Weight:</strong> {{ order.load_weight }}</p>
+        <p><strong>Loading Place:</strong> {{ order.loading_company }}</p>
+        <p><strong>Delivery Place:</strong> {{ order.delivery_company }}</p>
+        <a href="{{ url_for('driver.confirm_finish_order', id=order.id) }}" class="btn btn-primary">Complete</a>
     {% else %}
         <p>You don’t have any orders right now.</p>
     {% endif %}
-</body>
+</div>
 {% endblock %}
+

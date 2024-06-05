@@ -5,12 +5,13 @@
 {% block header %}Trailer Delete{% endblock %}
 
 {% block content %}
-<div>
+<div class="form-container">
     <h1>Are you sure you want to delete {{ trailer }}?</h1>
     <form action="{{ url_for('dispatcher.delete_trailer', id=trailer.id) }}" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <button type="submit">Delete</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{{ url_for('dispatcher.trailer_details', id=trailer.id) }}" class="btn btn-secondary">Cancel</a>
     </form>
-    <a href="{{ url_for('dispatcher.trailers') }}">Cancel</a>
 </div>
 {% endblock %}
+

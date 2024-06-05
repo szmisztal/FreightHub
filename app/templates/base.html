@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Freight Hub{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <header>
@@ -27,17 +28,17 @@
                         <li><a href="{{ url_for('planner.transportation_orders') }}">Transportation orders list</a></li>
                         <li><a href="{{ url_for('planner.archived_transportation_orders') }}">Archived transportation orders list</a></li>
                     {% elif current_user.role == "dispatcher" %}
-                        <li><a href="{{ url_for('dispatcher.new_tractor_head') }}">Add new tractor head</a> </li>
-                        <li><a href="{{ url_for('dispatcher.tractor_heads') }}">Tractor heads list</a> </li>
-                        <li><a href="{{ url_for('dispatcher.new_trailer') }}">Add new trailer</a> </li>
-                        <li><a href="{{ url_for('dispatcher.trailers') }}">Trailers list</a> </li>
+                        <li><a href="{{ url_for('dispatcher.new_tractor_head') }}">Add new tractor head</a></li>
+                        <li><a href="{{ url_for('dispatcher.tractor_heads') }}">Tractor heads list</a></li>
+                        <li><a href="{{ url_for('dispatcher.new_trailer') }}">Add new trailer</a></li>
+                        <li><a href="{{ url_for('dispatcher.trailers') }}">Trailers list</a></li>
                         <li><a href="{{ url_for('dispatcher.active_transport_orders') }}">Active Transport Orders</a></li>
                     {% elif current_user.role == "driver" %}
                         <li><a href="{{ url_for('driver.current_transportation_order') }}">Your current transportation order</a></li>
                         <li><a href="{{ url_for('driver.completed_orders') }}">Your completed transportation orders</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('user.edit_user_data', id=current_user.id) }}">Edit your user data</a></li>
-                    <li><a href="{{ url_for('user.users_list') }}">Users list</a> </li>
+                    <li><a href="{{ url_for('user.users_list') }}">Users list</a></li>
                     <li><a href="{{ url_for('user.logout_confirm') }}">Logout</a></li>
                 {% else %}
                     <li><a href="{{ url_for('user.register') }}">Register</a></li>
@@ -52,3 +53,5 @@
     </main>
 </body>
 </html>
+
+

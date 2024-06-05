@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Traktor Heads List{% endblock %}
+{% block title %}Tractor Heads List{% endblock %}
 
 {% block header %}Tractor Heads List{% endblock %}
 
 {% block content %}
-<body>
+<div class="list-container tractor-heads-list">
     <h1>Tractor Heads List</h1>
     <ul>
         {% for tractor_head in tractor_heads %}
@@ -16,5 +16,7 @@
             </li>
         {% endfor %}
     </ul>
-</body>
+</div>
 {% endblock %}
+
+

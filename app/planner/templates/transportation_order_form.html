@@ -5,42 +5,49 @@
 {% block header %}{{ title }} Form{% endblock %}
 
 {% block content %}
-<div class="transportation_order-form">
+<div class="form-container">
     <form method="post">
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.planned_delivery_date.label }} {{ form.planned_delivery_date }}<br>
+        <div class="form-group">
+            <label for="planned_delivery_date">{{ form.planned_delivery_date.label }}</label>
+            {{ form.planned_delivery_date(id="planned_delivery_date", class="form-control") }}
             {% for error in form.planned_delivery_date.errors %}
-                <span style="color: red;">{{ error }}</span>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.trailer_type.label }} {{ form.trailer_type }}<br>
+        <div class="form-group">
+            <label for="trailer_type">{{ form.trailer_type.label }}</label>
+            {{ form.trailer_type(id="trailer_type", class="form-control") }}
             {% for error in form.trailer_type.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span><br>
             {% endfor %}
         </div>
-        <div>
-            {{ form.load_weight.label }} {{ form.load_weight }}<br>
+        <div class="form-group">
+            <label for="load_weight">{{ form.load_weight.label }}</label>
+            {{ form.load_weight(id="load_weight", class="form-control") }}
             {% for error in form.load_weight.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span><br>
             {% endfor %}
         </div>
-        <div>
-            {{ form.loading_place.label }} {{ form.loading_place }}<br>
+        <div class="form-group">
+            <label for="loading_place">{{ form.loading_place.label }}</label>
+            {{ form.loading_place(id="loading_place", class="form-control") }}
             {% for error in form.loading_place.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span><br>
             {% endfor %}
         </div>
-        <div>
-            {{ form.delivery_place.label }} {{ form.delivery_place }}<br>
+        <div class="form-group">
+            <label for="delivery_place">{{ form.delivery_place.label }}</label>
+            {{ form.delivery_place(id="delivery_place", class="form-control") }}
             {% for error in form.delivery_place.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span><br>
             {% endfor %}
         </div>
-        <div>
-            {{ form.submit() }}
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
 </div>
 {% endblock %}
+
+

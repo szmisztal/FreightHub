@@ -5,12 +5,13 @@
 {% block header %}Company Delete{% endblock %}
 
 {% block content %}
-<div>
+<div class="form-container">
     <h1>Are you sure you want to delete {{ company.name }}?</h1>
     <form action="{{ url_for('planner.delete_company', id=company.id) }}" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <button type="submit">Delete</button>
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{{ url_for('planner.company_details', id=company.id) }}" class="btn btn-secondary">Cancel</a>
     </form>
-    <a href="{{ url_for('planner.companies') }}">Cancel</a>
 </div>
 {% endblock %}
+

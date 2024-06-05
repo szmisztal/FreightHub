@@ -5,11 +5,13 @@
 {% block header %}Tractor Head Details{% endblock %}
 
 {% block content %}
-<body>
-    <p>Brand: {{ tractor_head.brand.upper() }}</p>
-    <p>Registration number: {{ tractor_head.registration_number.upper() }}</p>
-    <a href="{{ url_for('dispatcher.edit_tractor_head', id=tractor_head.id) }}">Edit</a><br>
-    <a href="{{ url_for('dispatcher.confirm_tractor_head_delete', id=tractor_head.id) }}">Delete</a><br>
-    <a href="{{ url_for('dispatcher.tractor_heads') }}">Back to list</a><br>
-</body>
+<div class="form-container tractor-head-details">
+    <p><strong>Brand:</strong> {{ tractor_head.brand.upper() }}</p>
+    <p><strong>Registration number:</strong> {{ tractor_head.registration_number.upper() }}</p>
+    <a href="{{ url_for('dispatcher.edit_tractor_head', id=tractor_head.id) }}" class="btn btn-primary">Edit</a><br>
+    <a href="{{ url_for('dispatcher.confirm_tractor_head_delete', id=tractor_head.id) }}" class="btn btn-danger">Delete</a><br>
+    <a href="{{ url_for('dispatcher.tractor_heads') }}" class="btn btn-secondary">Back to list</a><br>
+</div>
 {% endblock %}
+
+

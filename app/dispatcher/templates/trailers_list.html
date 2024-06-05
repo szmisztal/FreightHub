@@ -5,7 +5,7 @@
 {% block header %}Trailers List{% endblock %}
 
 {% block content %}
-<body>
+<div class="list-container trailers-list">
     <h1>Trailers List</h1>
     <ul>
         {% for trailer in trailers %}
@@ -16,5 +16,7 @@
             </li>
         {% endfor %}
     </ul>
-</body>
+</div>
 {% endblock %}
+
+

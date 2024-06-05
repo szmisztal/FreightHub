@@ -5,18 +5,21 @@
 {% block header %}Archived Orders{% endblock %}
 
 {% block content %}
-<body>
-    <ul>
+<div class="list-container archived-orders">
+    <h1>Archived Orders</h1>
+    <ul class="order-list">
         {% for order in archived_orders %}
-            <li>
-              <p>Date: {{ order.planned_delivery_date }}</p>
-              <p>Tractor Head: {{ order.tractor_head }}</p>
-              <p>Trailer: {{ order.trailer }}</p>
-              <p>Load Weight: {{ order.load_weight }}</p>
-              <p>Loading Place: {{ order.loading_company }}</p>
-              <p>Delivery Place: {{ order.delivery_company }}</p>
+            <li class="order-item">
+                <p><strong>Date:</strong> {{ order.planned_delivery_date }}</p>
+                <p><strong>Tractor Head:</strong> {{ order.tractor_head }}</p>
+                <p><strong>Trailer:</strong> {{ order.trailer }}</p>
+                <p><strong>Load Weight:</strong> {{ order.load_weight }}</p>
+                <p><strong>Loading Place:</strong> {{ order.loading_company }}</p>
+                <p><strong>Delivery Place:</strong> {{ order.delivery_company }}</p>
             </li>
         {% endfor %}
     </ul>
-</body>
+</div>
 {% endblock %}
+
+

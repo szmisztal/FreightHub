@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %} Orders List {% endblock %}
+{% block title %}Orders List{% endblock %}
 
-{% block header %} Orders List {% endblock %}
+{% block header %}Orders List{% endblock %}
 
 {% block content %}
-    <h1> Orders List </h1>
+<div class="list-container orders-list">
+    <h1>Orders List</h1>
     <ul>
         {% for order in orders %}
-            <li>
+            <li class="order-item">
                 <a href="{{ url_for('dispatcher.complete_the_order', id=order.id) }}">
                     {{ order.planned_delivery_date }} : {{ order.loading_company }} ---> {{ order.delivery_company }}
                 </a>
@@ -18,4 +19,6 @@
             </li>
         {% endfor %}
     </ul>
+</div>
 {% endblock %}
+

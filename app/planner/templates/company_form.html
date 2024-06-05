@@ -5,54 +5,63 @@
 {% block header %}{{ title }} Form{% endblock %}
 
 {% block content %}
-<div class="company_name-form">
+<div class="form-container">
     <form method="post">
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.company_name.label }} {{ form.company_name(size=20) }}<br>
+        <div class="form-group">
+            <label for="company_name">{{ form.company_name.label }}</label>
+            {{ form.company_name(id="company_name", class="form-control", size=20) }}
             {% for error in form.company_name.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.country.label }} {{ form.country(size=20) }}<br>
+        <div class="form-group">
+            <label for="country">{{ form.country.label }}</label>
+            {{ form.country(id="country", class="form-control", size=20) }}
             {% for error in form.country.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.town.label }} {{ form.town(size=20) }}<br>
+        <div class="form-group">
+            <label for="town">{{ form.town.label }}</label>
+            {{ form.town(id="town", class="form-control", size=20) }}
             {% for error in form.town.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.postal_code.label }} {{ form.postal_code(size=20) }}<br>
+        <div class="form-group">
+            <label for="postal_code">{{ form.postal_code.label }}</label>
+            {{ form.postal_code(id="postal_code", class="form-control", size=20) }}
             {% for error in form.postal_code.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.street.label }} {{ form.street(size=20) }}<br>
+        <div class="form-group">
+            <label for="street">{{ form.street.label }}</label>
+            {{ form.street(id="street", class="form-control", size=20) }}
             {% for error in form.street.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.street_number.label }} {{ form.street_number(size=20) }}<br>
+        <div class="form-group">
+            <label for="street_number">{{ form.street_number.label }}</label>
+            {{ form.street_number(id="street_number", class="form-control", size=20) }}
             {% for error in form.street_number.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.phone_number.label }} {{ form.phone_number(size=20) }}<br>
+        <div class="form-group">
+            <label for="phone_number">{{ form.phone_number.label }}</label>
+            {{ form.phone_number(id="phone_number", class="form-control", size=20) }}
             {% for error in form.phone_number.errors %}
-                <span style="color: red;">{{ error }}</span><br>
+                <span class="error">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
-            {{ form.submit() }}
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
         </div>
     </form>
 </div>
 {% endblock %}
+
+

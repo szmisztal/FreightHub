@@ -5,15 +5,17 @@
 {% block header %}Company Details{% endblock %}
 
 {% block content %}
-<body>
+<div class="form-container company-details">
     <h1>Company Details: {{ company.company_name }}</h1>
-    <p>Country: {{ company.country }}</p>
-    <p>Town: {{ company.town }}</p>
-    <p>Postal Code: {{ company.postal_code }}</p>
-    <p>Street: {{ company.street }} {{ company.street_number }}</p>
-    <p>Phone Number: {{ company.phone_number }}</p>
-    <a href="{{ url_for('planner.edit_company', id=company.id) }}">Edit</a><br>
-    <a href="{{ url_for('planner.confirm_company_delete', id=company.id) }}">Delete</a><br>
-    <a href="{{ url_for('planner.companies') }}">Back to list</a><br>
-</body>
+    <p><strong>Country:</strong> {{ company.country }}</p>
+    <p><strong>Town:</strong> {{ company.town }}</p>
+    <p><strong>Postal Code:</strong> {{ company.postal_code }}</p>
+    <p><strong>Street:</strong> {{ company.street }} {{ company.street_number }}</p>
+    <p><strong>Phone Number:</strong> {{ company.phone_number }}</p>
+    <a href="{{ url_for('planner.edit_company', id=company.id) }}" class="btn btn-primary">Edit</a><br>
+    <a href="{{ url_for('planner.confirm_company_delete', id=company.id) }}" class="btn btn-danger">Delete</a><br>
+    <a href="{{ url_for('planner.companies') }}" class="btn btn-secondary">Back to list</a><br>
+</div>
 {% endblock %}
+
+
