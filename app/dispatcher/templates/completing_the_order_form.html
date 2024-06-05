@@ -10,12 +10,21 @@
             {{ form.hidden_tag() }}
             <div>
                 {{ form.driver.label }} {{ form.driver }}
+                {% for error in form.driver.errors %}
+                    <span style="color: red;">{{ error }}</span><br>
+                {% endfor %}
             </div>
             <div>
                 {{ form.tractor_head.label }} {{ form.tractor_head }}
+                {% for error in form.tractor_head.errors %}
+                    <span style="color: red;">{{ error }}</span><br>
+                {% endfor %}
             </div>
             <div>
                 {{ form.trailer.label }} {{ form.trailer }}
+                {% for error in form.trailer.errors %}
+                    <span style="color: red;">{{ error }}</span><br>
+                {% endfor %}
             </div>
             <div>
                 {{ form.submit() }}

@@ -10,9 +10,15 @@
         {{ form.hidden_tag() }}
         <div>
             {{ form.brand.label }} {{ form.brand(size=20) }}<br>
+            {% for error in form.brand.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.registration_number.label }} {{ form.registration_number(size=20) }}<br>
+            {% for error in form.registration_number.errors %}
+                <span style="color: red;">{{ error }}</span><br>
+            {% endfor %}
         </div>
         <div>
             {{ form.submit() }}
