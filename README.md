@@ -1,6 +1,6 @@
-# Flask FreightHub
+# FreightHub
 
-Flask FreightHub is a web application designed to manage transport orders for a logistics company. The application is divided into four main modules: User, Planner, Dispatcher, and Driver. Each module serves a specific role in the workflow of managing transport orders.
+FreightHub is a web application designed to manage transport orders for a logistics company. The application is divided into four main modules: User, Planner, Dispatcher, and Driver. Each module serves a specific role in the workflow of managing transport orders.
 
 ## Table of Contents
 
