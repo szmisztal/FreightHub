@@ -27,8 +27,8 @@ FreightHub is a web application designed to manage transport orders for a logist
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-username/flask-freighthub.git
-    cd flask-freighthub
+    git clone https://github.com/szmisztal/FreightHub.git
+    cd FreightHub
     ```
 
 2. Create a virtual environment and activate it:
