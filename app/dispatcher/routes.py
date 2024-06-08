@@ -17,6 +17,16 @@ from .schemas import TractorHeadSchema, TrailerSchema
 @login_required
 @role_required("dispatcher")
 def new_tractor_head():
+    """
+    Handle new tractor head creation.
+
+    This route allows dispatchers to create a new tractor head by filling out
+    the tractor head form. It validates the input data and adds the new tractor
+    head to the database.
+
+    Returns:
+        str: Rendered HTML template for the new tractor head form.
+    """
     form = TractorHeadForm()
     schema = TractorHeadSchema()
     if request.method == "POST":
@@ -48,6 +58,14 @@ def new_tractor_head():
 @login_required
 @role_required("dispatcher")
 def tractor_heads():
+    """
+    Display list of all tractor heads.
+
+    This route fetches all tractor heads from the database and displays them.
+
+    Returns:
+        str: Rendered HTML template displaying the list of tractor heads.
+    """
     all_tractor_heads = TractorHead.query.all()
     if not all_tractor_heads:
         flash("Tractor heads list is empty.", "info")
@@ -57,6 +75,17 @@ def tractor_heads():
 @login_required
 @role_required("dispatcher")
 def tractor_head_details(id):
+    """
+    Display tractor head details.
+
+    This route fetches and displays details of a specific tractor head.
+
+    Args:
+        id (int): The ID of the tractor head.
+
+    Returns:
+        str: Rendered HTML template displaying the tractor head details.
+    """
     tractor_head = TractorHead.query.get_or_404(id)
     return render_template("tractor_head_details.html", tractor_head=tractor_head)
 
@@ -64,6 +93,19 @@ def tractor_head_details(id):
 @login_required
 @role_required("dispatcher")
 def edit_tractor_head(id):
+    """
+    Handle tractor head data editing.
+
+    This route allows dispatchers to edit the data of an existing tractor head
+    by filling out the tractor head form. It validates the input data and updates
+    the tractor head in the database.
+
+    Args:
+        id (int): The ID of the tractor head to be edited.
+
+    Returns:
+        str: Rendered HTML template for the edit tractor head form.
+    """
     tractor_head = TractorHead.query.get_or_404(id)
     form = TractorHeadForm(obj=tractor_head)
     schema = TractorHeadSchema()
@@ -96,6 +138,17 @@ def edit_tractor_head(id):
 @login_required
 @role_required("dispatcher")
 def confirm_tractor_head_delete(id):
+    """
+    Render delete confirmation page for a tractor head.
+
+    This route displays a confirmation page before deleting a tractor head.
+
+    Args:
+        id (int): The ID of the tractor head to be deleted.
+
+    Returns:
+        str: Rendered HTML template for the delete confirmation page.
+    """
     tractor_head = TractorHead.query.get_or_404(id)
     csrf_token = generate_csrf()
     return render_template("confirm_tractor_head_delete.html", csrf_token=csrf_token, tractor_head=tractor_head)
@@ -104,6 +157,17 @@ def confirm_tractor_head_delete(id):
 @login_required
 @role_required("dispatcher")
 def delete_tractor_head(id):
+    """
+    Handle tractor head deletion.
+
+    This route deletes a tractor head from the database.
+
+    Args:
+        id (int): The ID of the tractor head to be deleted.
+
+    Returns:
+        str: Redirect to the list of tractor heads.
+    """
     try:
         tractor_head = TractorHead.query.get_or_404(id)
         db.session.delete(tractor_head)
@@ -119,6 +183,16 @@ def delete_tractor_head(id):
 @login_required
 @role_required("dispatcher")
 def new_trailer():
+    """
+    Handle new trailer creation.
+
+    This route allows dispatchers to create a new trailer by filling out
+    the trailer form. It validates the input data and adds the new trailer
+    to the database.
+
+    Returns:
+        str: Rendered HTML template for the new trailer form.
+    """
     form = TrailerForm()
     schema = TrailerSchema()
     if request.method == "POST":
@@ -150,6 +224,14 @@ def new_trailer():
 @login_required
 @role_required("dispatcher")
 def trailers():
+    """
+    Display list of all trailers.
+
+    This route fetches all trailers from the database and displays them.
+
+    Returns:
+        str: Rendered HTML template displaying the list of trailers.
+    """
     all_trailers = Trailer.query.all()
     if not all_trailers:
         flash("Trailers list is empty.", "info")
@@ -159,6 +241,17 @@ def trailers():
 @login_required
 @role_required("dispatcher")
 def trailer_details(id):
+    """
+    Display trailer details.
+
+    This route fetches and displays details of a specific trailer.
+
+    Args:
+        id (int): The ID of the trailer.
+
+    Returns:
+        str: Rendered HTML template displaying the trailer details.
+    """
     trailer = Trailer.query.get_or_404(id)
     return render_template("trailer_details.html", trailer=trailer)
 
@@ -166,6 +259,19 @@ def trailer_details(id):
 @login_required
 @role_required("dispatcher")
 def edit_trailer(id):
+    """
+    Handle trailer data editing.
+
+    This route allows dispatchers to edit the data of an existing trailer
+    by filling out the trailer form. It validates the input data and updates
+    the trailer in the database.
+
+    Args:
+        id (int): The ID of the trailer to be edited.
+
+    Returns:
+        str: Rendered HTML template for the edit trailer form.
+    """
     trailer = Trailer.query.get_or_404(id)
     form = TrailerForm(obj=trailer)
     schema = TrailerSchema()
@@ -198,6 +304,17 @@ def edit_trailer(id):
 @login_required
 @role_required("dispatcher")
 def confirm_trailer_delete(id):
+    """
+    Render delete confirmation page for a trailer.
+
+    This route displays a confirmation page before deleting a trailer.
+
+    Args:
+        id (int): The ID of the trailer to be deleted.
+
+    Returns:
+        str: Rendered HTML template for the delete confirmation page.
+    """
     trailer = Trailer.query.get_or_404(id)
     csrf_token = generate_csrf()
     return render_template("confirm_trailer_delete.html", csrf_token=csrf_token, trailer=trailer)
@@ -206,11 +323,22 @@ def confirm_trailer_delete(id):
 @login_required
 @role_required("dispatcher")
 def delete_trailer(id):
+    """
+    Handle trailer deletion.
+
+    This route deletes a trailer from the database.
+
+    Args:
+        id (int): The ID of the trailer to be deleted.
+
+    Returns:
+        str: Redirect to the list of trailers.
+    """
     try:
         trailer = Trailer.query.get_or_404(id)
         db.session.delete(trailer)
         db.session.commit()
-        flash("Trailerd has been deleted.", "success")
+        flash("Trailer has been deleted.", "success")
     except Exception as e:
         db.session.rollback()
         current_app.logger.exception(f"Error during {trailer} deleting: {e}")
@@ -221,6 +349,15 @@ def delete_trailer(id):
 @login_required
 @role_required("dispatcher")
 def active_transport_orders():
+    """
+    Display list of active transportation orders.
+
+    This route fetches all incomplete transportation orders from the database
+    and displays them.
+
+    Returns:
+        str: Rendered HTML template displaying the list of active transportation orders.
+    """
     orders = TransportationOrder.query.filter_by(completed=False).order_by(TransportationOrder.planned_delivery_date).all()
     if not orders:
         flash("There are no orders yet", "info")
@@ -230,6 +367,19 @@ def active_transport_orders():
 @login_required
 @role_required("dispatcher")
 def complete_the_order(id):
+    """
+    Handle completion of a transportation order.
+
+    This route allows dispatchers to complete the details of an existing
+    transportation order by filling out the order form. It validates the input
+    data and updates the order in the database.
+
+    Args:
+        id (int): The ID of the transportation order to be completed.
+
+    Returns:
+        str: Rendered HTML template for the completing the order form.
+    """
     order = TransportationOrder.query.get_or_404(id)
     form = CompletingTheTransportationOrderForm(obj=order)
     schema = TransportationOrderSchema()
@@ -263,4 +413,5 @@ def complete_the_order(id):
             current_app.logger.exception(f"Error during completing the {order}: {e}")
             flash(f"Error: {e}, try again", "danger")
     return render_template("completing_the_order_form.html", form=form)
+
 

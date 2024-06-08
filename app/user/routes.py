@@ -11,6 +11,15 @@ from .schemas import UserSchema
 
 @user_bp.route("/register", methods=["GET", "POST"])
 def register():
+    """
+    Handle user registration.
+
+    This route allows new users to register by filling out the registration form.
+    It validates the input data, creates a new user, and adds them to the database.
+
+    Returns:
+        str: Rendered HTML template for the registration page.
+    """
     form = RegistrationForm()
     schema = UserSchema()
     if request.method == "POST":
@@ -28,7 +37,7 @@ def register():
             user = create_user(result)
             db.session.add(user)
             db.session.commit()
-            flash("Registration successfully, you can log in.", "success")
+            flash("Registration successful, you can log in.", "success")
             return redirect(url_for("user.login"))
         except ValidationError as e:
             send_validation_errors_to_form(e, form)
@@ -44,6 +53,17 @@ def register():
     return render_template("register.html", form=form, title="Registration")
 
 def create_user(data):
+    """
+    Create a new user instance.
+
+    This function hashes the user's password and creates a new User object.
+
+    Args:
+        data (dict): Dictionary containing user data.
+
+    Returns:
+        User: A new User object.
+    """
     hashed_password = bcrypt.generate_password_hash(data["password"]).decode("utf-8")
     return User(
         username=data["username"],
@@ -58,6 +78,18 @@ def create_user(data):
 @user_bp.route("/change_data/<int:id>", methods=["GET", "POST"])
 @login_required
 def edit_user_data(id):
+    """
+    Edit user data.
+
+    This route allows users to edit their own data. It validates the input data
+    and updates the user's information in the database.
+
+    Args:
+        id (int): The ID of the user to be edited.
+
+    Returns:
+        str: Rendered HTML template for the user data edit page.
+    """
     if current_user.id != id:
         flash("You don't have permission to edit this user's data.", "danger")
         return redirect(url_for("home"))
@@ -103,6 +135,15 @@ def edit_user_data(id):
 
 @user_bp.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    Handle user login.
+
+    This route allows users to log in by providing their email and password.
+    If the credentials are correct, the user is logged in and redirected to the home page.
+
+    Returns:
+        str: Rendered HTML template for the login page.
+    """
     if current_user.is_authenticated:
         flash("You are logged in", "info")
         return redirect(url_for("home"))
@@ -121,6 +162,14 @@ def login():
 @user_bp.route("/logout", methods=["POST"])
 @login_required
 def logout():
+    """
+    Handle user logout.
+
+    This route logs out the current user and redirects them to the home page.
+
+    Returns:
+        str: Redirect to the home page.
+    """
     logout_user()
     flash("You have been logged out.", "success")
     return redirect(url_for("home"))
@@ -128,11 +177,27 @@ def logout():
 @user_bp.route("/logout/confirm", methods=["GET"])
 @login_required
 def logout_confirm():
+    """
+    Render logout confirmation page.
+
+    This route displays a confirmation page before logging the user out.
+
+    Returns:
+        str: Rendered HTML template for the logout confirmation page.
+    """
     return render_template("logout_confirm.html")
 
 @user_bp.route("/all", methods=["GET"])
 @login_required
 def users_list():
+    """
+    Display list of all users.
+
+    This route fetches all users from the database and categorizes them by role (planner, dispatcher, driver).
+
+    Returns:
+        str: Rendered HTML template displaying the list of users.
+    """
     users = User.query.all()
     planners = [user for user in users if user.role == "planner"]
     dispatchers = [user for user in users if user.role == "dispatcher"]
