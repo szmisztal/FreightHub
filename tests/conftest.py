@@ -4,6 +4,8 @@ from app.common.models import User
 from app.common.schemas import TransportationOrderSchema
 from app.user.routes import create_user
 from app.user.schemas import UserSchema
+from app.dispatcher.schemas import TractorHeadSchema, TrailerSchema
+from app.planner.schemas import CompanySchema
 
 @pytest.fixture
 def app():
@@ -35,7 +37,7 @@ def user(app):
         "phone_number": "123456789",
         "email": "test@mail.com",
         "password": "test_password",
-        "role": "planner"
+        "role": "driver"
     }
     with app.app_context():
         user = create_user(user_data)
@@ -60,3 +62,15 @@ def user_schema():
 @pytest.fixture
 def transportation_order_schema():
     return TransportationOrderSchema()
+
+@pytest.fixture
+def tractor_head_schema():
+    return TractorHeadSchema()
+
+@pytest.fixture
+def trailer_schema():
+    return TrailerSchema()
+
+@pytest.fixture
+def company_schema():
+    return CompanySchema()
