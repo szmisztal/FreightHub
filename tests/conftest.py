@@ -1,6 +1,7 @@
 import pytest
 from app import create_app, db
 from app.common.models import User
+from app.common.schemas import TransportationOrderSchema
 from app.user.routes import create_user
 from app.user.schemas import UserSchema
 
@@ -55,3 +56,7 @@ def logged_in_client(client, user, app):
 @pytest.fixture
 def user_schema():
     return UserSchema()
+
+@pytest.fixture
+def transportation_order_schema():
+    return TransportationOrderSchema()
