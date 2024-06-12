@@ -43,7 +43,7 @@ def test_submit_login_form(client, user):
 
 #SCHEMAS
 
-def test_valid_user_date(user_schema):
+def test_valid_user_data(user_schema):
     data = {
         "username": "test_username",
         "first_name": "test_first_name",

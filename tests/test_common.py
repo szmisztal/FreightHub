@@ -1,10 +1,10 @@
-from datetime import datetime
 import pytest
+from datetime import datetime
 from marshmallow import ValidationError
 
 # SCHEMAS
 
-def test_valid_date(transportation_order_schema):
+def test_valid_data(transportation_order_schema):
     data = {
         "creation_date": str(datetime.today().date()),
         "created_by": 1,
