@@ -16,6 +16,13 @@
             {% endfor %}
         </div>
         <div class="form-group">
+            <label for ="max_load_capacity">{{ form.max_load_capacity.label }}</label>
+            {{ form.max_load_capacity(id="max_load_capacity", class="form-control") }}
+            {% for error in form.max_load_capacity.errors %}
+                <span class="error">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
             <label for="registration_number">{{ form.registration_number.label }}</label>
             {{ form.registration_number(id="registration_number", class="form-control", size=20) }}
             {% for error in form.registration_number.errors %}
