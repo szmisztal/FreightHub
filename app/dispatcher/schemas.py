@@ -24,9 +24,11 @@ class TrailerSchema(Schema):
 
     Attributes:
         type (str): The type of the trailer.
+        max_load_capacity (int): trailer`s maximum load capacity.
         registration_number (str): The unique registration number of the trailer.
     """
     type = fields.Str(required=True, validate=[validate.OneOf([
+        "Tanker",
         "Curtain side",
         "Refrigerated",
         "Tipper",
@@ -35,6 +37,7 @@ class TrailerSchema(Schema):
         "Self-unloading",
         "Insulated"
     ]), not_blank])
+    max_load_capacity = fields.Int(required=True, validate=[not_blank])
     registration_number = fields.Str(required=True, validate=[validate.Length(equal=7), not_blank])
 
 
