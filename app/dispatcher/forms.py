@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField, StringField
+from wtforms import SelectField, SubmitField, StringField, IntegerField
+from wtforms.validators import Optional
 from app import db
 from app.common.models import User, TransportationOrder, Trailer
 from .models import TractorHead
@@ -19,10 +20,11 @@ class TrailerForm(FlaskForm):
     """
     Form for adding or updating a trailer.
 
-    This form collects information about the trailer including type and
+    This form collects information about the trailer including type, maximum load capacity and
     registration number.
     """
     type = SelectField("Type", choices=[
+        # ("Tanker", "Tanker trailer"),
         ("Curtain side", "Curtain-side trailer"),
         ("Refrigerated", "Refrigerated trailer"),
         ("Tipper", "Tipper trailer"),
@@ -31,7 +33,9 @@ class TrailerForm(FlaskForm):
         ("Self-unloading", "Self-unloading trailer"),
         ("Insulated", "Insulated trailer")
     ])
+    max_load_capacity = IntegerField("Maximum Load Capacity")
     registration_number = StringField("Registration Number")
+    # chambers_number = IntegerField("Chambers number", [Optional()])
     submit = SubmitField("Submit")
 
 class CompletingTheTransportationOrderForm(FlaskForm):
@@ -78,7 +82,10 @@ class CompletingTheTransportationOrderForm(FlaskForm):
         trailer_choices = [(0, "No Trailer")]
         if assigned_trailer:
             trailer_choices.append((assigned_trailer.id, f"{assigned_trailer.registration_number}"))
-        trailer_choices += [(trailer.id, f"{trailer.registration_number}") for trailer in self.get_available_trailer(kwargs.get("obj").trailer_type)]
+        trailer_choices += [(trailer.id, f"{trailer.registration_number}") for trailer in self.get_available_trailer(
+            kwargs.get("obj").trailer_type,
+            kwargs.get("obj").load_weight
+        )]
         self.trailer.choices = trailer_choices
 
     def get_available_drivers(self):
@@ -119,7 +126,7 @@ class CompletingTheTransportationOrderForm(FlaskForm):
         available_tractor_heads = [tractor_head for tractor_head in all_tractor_heads if tractor_head.id not in busy_tractor_head_ids]
         return available_tractor_heads
 
-    def get_available_trailer(self, trailer_type):
+    def get_available_trailer(self, trailer_type, order_load_weight):
         """
         Get a list of available trailers of a specific type.
 
@@ -137,7 +144,11 @@ class CompletingTheTransportationOrderForm(FlaskForm):
             TransportationOrder.trailer.isnot(None)
         ).all()
         busy_trailers = [trailer_id for (trailer_id,) in busy_trailer_ids]
-        available_trailers = Trailer.query.filter(Trailer.type == trailer_type, Trailer.id.notin_(busy_trailers)).all()
+        available_trailers = Trailer.query.filter(
+            Trailer.type == trailer_type,
+            Trailer.max_load_capacity >= order_load_weight,
+            Trailer.id.notin_(busy_trailers)
+        ).all()
         return available_trailers
 
 
