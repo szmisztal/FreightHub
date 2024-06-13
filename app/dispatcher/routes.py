@@ -198,6 +198,7 @@ def new_trailer():
     if request.method == "POST":
         trailer_data = {
             "type": form.type.data,
+            "max_load_capacity": form.max_load_capacity.data,
             "registration_number": form.registration_number.data.upper()
         }
         try:
@@ -278,11 +279,13 @@ def edit_trailer(id):
     if request.method == "POST":
         trailer_data = {
             "type": form.type.data,
+            "max_load_capacity": form.max_load_capacity.data,
             "registration_number": form.registration_number.data
         }
         try:
             result = schema.load(trailer_data)
             trailer.type = result["type"]
+            trailer.max_load_capacity = result["max_load_capacity"]
             trailer.registration_number = result["registration_number"].upper()
             db.session.commit()
             flash("Trailer details updated successfully.", "success")
