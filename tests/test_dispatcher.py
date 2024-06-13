@@ -30,6 +30,7 @@ def test_tractor_head_registration_number(tractor_head_schema):
 def test_trailer_data(trailer_schema):
     data = {
         "type": "Container",
+        "max_load_capacity": 24000,
         "registration_number": "WND1234"
     }
     result = trailer_schema.load(data)
@@ -40,11 +41,13 @@ def test_missing_fields_for_trailer(trailer_schema):
     with pytest.raises(ValidationError) as excinfo:
         trailer_schema.load(data)
     assert "type" in excinfo.value.messages
+    assert "max_load_capacity" in excinfo.value.messages
     assert "registration_number" in excinfo.value.messages
 
 def test_trailer_type(trailer_schema):
     data = {
         "type": "Invalid Type",
+        "max_load_capacity": 24000,
         "registration_number": "WND1234"
     }
     with pytest.raises(ValidationError) as excinfo:
@@ -54,6 +57,7 @@ def test_trailer_type(trailer_schema):
 def test_trailer_registration_number(tractor_head_schema):
     data = {
         "type": "Container",
+        "max_load_capacity": 24000,
         "registration_number": "WND"
     }
     with pytest.raises(ValidationError) as excinfo:
